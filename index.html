@@ -11,10 +11,21 @@
 <script type="text/javascript">
 
 var labContent = [
-	['dot', 'components'],
+
 	['spinner', 'components'],
-	['upload', 'misc', 'client side upload'],
+	['dot', 'components'],
+	['upload', 'misc', 'client side'],
+	['camera', 'misc', 'user stream'],
+	['gl_base', 'gl', 'boilerplate'],
+	['gl_base_tex', 'gl'],
+	['gl_base_video', 'gl']
+
 ];
+
+labContent.sort(function(a, b) {
+	if(a[0] < b[0]) return 0;
+	else return 1;
+});
 
 </script>
 
@@ -29,8 +40,8 @@ var labContent = [
 	</li>
 
 	<li>
-		<ul class="links three">
-			<li>3D</li>
+		<ul class="links gl">
+			<li>GL</li>
 		</ul>
 	</li>
 
@@ -53,7 +64,11 @@ var lists = {};
 
 for(var i = 0; i < labContent.length; i++) {
 	var n = labContent[i][0];
-	var d = labContent[i][2] || n;
+	var d = labContent[i][2] || '';
+
+	if(d == '') d = n.replace(/_/g, ' ');
+	else d = n.replace('_', ' ') + ' - ' + d; 
+
 	var l = 'lab/' + n + '/';
 	var t = labContent[i][1].split(',');
 	var s = '<a href="' + l + '">' + d + '</a>';

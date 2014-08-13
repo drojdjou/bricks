@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>camera brick</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+
+<style type="text/css">
+
+	body {
+		margin: 0;
+		background-color: #000;
+		color: #fff;
+		padding: 0;
+		font-family: Arial, sans-serif;
+		font-size: 12pt;
+	}
+
+	* {
+		-webkit-box-sizing: border-box;
+		box-sizing: border-box;
+	}
+
+	#sources {
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 30;
+		list-style-type: none;
+		padding: 0;
+		margin: 0;
+		width: 100%;
+	}
+
+	#sources li {
+		float: left;
+		width: 50%;
+		background-color: rgba(0,0,0,0.3);
+		padding: 8px;
+		border: 1px solid transparent;
+		text-transform: uppercase;
+		text-align: center;
+		font-size: 0.9em;
+		text-shadow: 1px 1px rgba(0,0,0,0.5);
+
+		display: none;
+	}
+
+	#sources li:active {
+		background-color: #ddd;
+	}
+
+	video {
+		position: absolute;
+		left: 0;
+		z-index: 10;
+		top: 0;
+		width: 100%;
+		height: 100%;
+	}
+
+</style>
+
+</head>
+<body>
+
+<!-- http://www.html5rocks.com/en/tutorials/getusermedia/intro/ -->
+<!-- https://simpl.info/getusermedia/sources/js/main.js -->
+
+<video muted autoplay></video>
+
+<ul id="sources">
+</ul>
+
+<script>
+	navigator.getUserMedia  = navigator.getUserMedia ||
+								navigator.webkitGetUserMedia ||
+								navigator.mozGetUserMedia ||
+								navigator.msGetUserMedia;
+
+	var video = document.querySelector('video'), stream, paused = false;
+		
+	video.addEventListener('click', function() {
+		if(paused) { 
+			video.play();
+		} else {
+			video.pause();
+		}
+
+		paused = !paused;
+	});
+
+	var sourceList = document.querySelector('#sources');
+
+	var addSource = function(id, label) {
+
+		var li = document.createElement('li');
+
+		li.innerHTML = label;
+		li.addEventListener('click', function() {
+			getMedia(id);
+		});
+
+		sourceList.appendChild(li);
+	}
+
+	var gotSources = function (sourceInfos) {
+		var ci = 1, lastId;
+		for (var i = 0; i != sourceInfos.length; ++i) {
+			var sourceInfo = sourceInfos[i];
+
+			if (sourceInfo.kind === 'video') {
+				addSource(sourceInfo.id, sourceInfo.label || 'camera ' + ci++);
+			}
+
+			lastId = sourceInfo.id;
+		}
+
+		getMedia(lastId);
+	}
+
+	if (typeof MediaStreamTrack === 'undefined'){
+		console.log('no MediaStreamTrack');
+	} else {
+		MediaStreamTrack.getSources(gotSources);
+	}
+
+	var errorCallback = function(e) {
+		console.log('Reeeejected!', e);
+	};
+
+	var successCallback = function(localMediaStream) {
+		stream = localMediaStream;
+
+		video.src = window.URL.createObjectURL(localMediaStream);
+		video.play();
+
+		video.style.width = window.innerWidth;
+		video.style.width = window.innerHeight;
+
+		video.onloadedmetadata = function(e) {
+			console.log(e);
+		};
+	};
+
+	var getMedia = function(id) {
+		if (!!stream) {
+			video.src = null;
+			stream.stop();
+			paused = false;
+		}
+
+		var options = {
+			audio: false,
+			video: {
+				optional: [
+					{ sourceId: id } 
+				]
+			}
+		};
+
+		navigator.getUserMedia(options, successCallback, errorCallback);
+	}
+
+	
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
