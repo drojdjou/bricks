@@ -1,0 +1,18 @@
+{
+  "name": "bricks",
+  "version": "0.0.0",
+  "authors": [
+    "Bartek Drozdz <bartek@everyday3d.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#~0.3.5",
+    "three": "mrdoob/three.js",
+    "bartekdrozdz-com": "drojdjou/bartekdrozdz.com"
+  }
+}

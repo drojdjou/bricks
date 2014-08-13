@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>b-dot - Web Component</title>
+
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
+
+<meta charset="UTF-8">
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/polymer/0.3.4/platform.js"></script>
+<!-- <script src="../../bower_components/platform/platform.js"></script> -->
+
+
+
+<style type="text/css">
+
+body {
+	margin: 0;
+}
+
+b-dot {
+	margin: 20px;
+}
+
+b-dot:nth-of-type(2) {
+	width: 80px;
+	height: 80px;
+	margin: 40px;
+}
+
+b-dot#red {
+	margin: 60px;
+	width: 20px;
+	height: 20px;
+	background-color: #f00;
+}
+
+b-dot.rotating-dot {
+	width: 200px;
+	height: 200px;
+}
+
+</style>
+
+<link rel="import" href="dot.html">
+
+</head>
+<body>
+
+	<b-dot id="red"></b-dot>
+	<b-dot src="../_assets/sample-600.jpg"></b-dot>
+	<b-dot class="rotating-dot" src="../_assets/sample2-600.jpg"></b-dot>
+
+	<script type="text/javascript">
+
+		var rot = document.querySelector('.rotating-dot'), r = 0;
+
+		var run = function() {
+			requestAnimationFrame(run);
+
+			var rp = Math.sin(r * 0.02) * 90;
+
+			rot.style.transform = 'rotate(' + rp + 'deg)';
+			rot.style.webkitTransform = 'rotate(' + rp + 'deg)';
+			r += 1;
+		};
+
+		run();
+
+	</script>
+
+</body>
+</head>

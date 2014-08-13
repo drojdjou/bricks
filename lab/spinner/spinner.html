@@ -1,0 +1,76 @@
+<script type="text/javascript">
+
+	var spinnerProto = Object.create(HTMLElement.prototype);
+	var doc = (document._currentScript || document.currentScript).ownerDocument;
+
+	var canvas, ctx, playing = false, run;
+	var r, t, s, p;
+
+	var smoothstep = function(t) { return t * t * (3 - 2 * t); };
+		
+	var run = function() {
+		if(playing) requestAnimationFrame(run);
+
+		ctx.clearRect(0, 0, r, r);
+
+		var ps = p % 2;
+
+		if(ps < 1) ps = smoothstep(ps);
+		else ps = 1 + smoothstep(ps - 1);
+
+		var sa = (ps < 1) ? 0 : Math.PI * 2 * (ps - 1);
+		var se = (ps < 1) ? Math.PI * 2 * ps : Math.PI * 2;
+		
+
+		ctx.beginPath();
+		ctx.arc(r * 0.5, r * 0.5, r * 0.5 - t, sa, se);
+		ctx.stroke();
+
+		p += s;
+	}
+
+	spinnerProto.getParameter = function(name, defaultVal) {
+		return this[name] || this.getAttribute(name) || defaultVal;
+	}
+
+	spinnerProto.play = function() {
+		if(!playing) {
+			playing = true;
+			run();
+		}
+	}
+
+	spinnerProto.stop = function() {
+		playing = false;
+	}
+
+	spinnerProto.createdCallback = function() {
+		canvas = document.createElement('canvas');
+		this.createShadowRoot().appendChild(canvas);
+		ctx = canvas.getContext('2d');
+	}
+
+	spinnerProto.attachedCallback = function() {
+		r = this.getParameter('radius', 20) * 2;
+		canvas.width = r;
+		canvas.height = r;
+
+		t = this.getParameter('thickness', 4)
+		s = this.getParameter('speed', 1) * 0.01;
+		p = 0;
+
+		playing = this.getParameter('autoplay', false);
+
+		ctx.strokeStyle = this.getParameter('color', '#000000');
+		ctx.lineWidth = t;
+
+		if(playing) run();
+	};
+
+	spinnerProto.detachedCallback = function() {
+		playing = false;
+	}
+
+	document.registerElement('b-spinner', { prototype: spinnerProto });
+
+</script>

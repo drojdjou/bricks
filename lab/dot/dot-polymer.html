@@ -1,0 +1,38 @@
+<!--
+
+	A polymer version of the dot component. Does exactly the same thing.
+
+-->
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<polymer-element name="b-dot" noscript>
+
+	<template>
+
+		<style type="text/css">
+
+		:host {
+			border-radius: 50%;
+			display: block;
+			width: 100px;
+			height: 100px;
+			background-size: cover;
+			background-color: #000000;
+		}
+
+		</style>
+
+	</template>
+
+	<script type="text/javascript">
+
+		Polymer('b-dot', {
+			ready: function() {
+				var src = this.getAttribute('src');
+				if(src) this.style.backgroundImage = 'url(' + src + ')';
+			}
+		});
+
+	</script>
+
+</polymer-element>

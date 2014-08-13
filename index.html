@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>bricks</title>
+
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
+<meta charset="UTF-8">
+
+<link rel="stylesheet" type="text/css" href="main.css">
+
+<script type="text/javascript">
+
+var labContent = [
+	['dot', 'components'],
+	['spinner', 'components'],
+	['upload', 'misc', 'client side upload'],
+];
+
+</script>
+
+</head>
+<body>
+
+<ul class="categories">
+	<li>
+		<ul class="links components">
+			<li>Components</li>
+		</ul>
+	</li>
+
+	<li>
+		<ul class="links three">
+			<li>3D</li>
+		</ul>
+	</li>
+
+	<li>
+		<ul class="links css">
+			<li>CSS</li>
+		</ul>
+	</li>
+
+	<li>
+		<ul class="links misc">
+			<li>Misc</li>
+		</ul>
+	</li>
+</ul>
+
+<script type="text/javascript">
+
+var lists = {};
+
+for(var i = 0; i < labContent.length; i++) {
+	var n = labContent[i][0];
+	var d = labContent[i][2] || n;
+	var l = 'lab/' + n + '/';
+	var t = labContent[i][1].split(',');
+	var s = '<a href="' + l + '">' + d + '</a>';
+
+	var n = document.createElement('li');
+	n.innerHTML = s;
+
+	for(var j = 0; j < t.length; j++) {
+		var c = t[j];
+		if(!lists[c]) lists[c] = document.querySelector('.' + c); 
+		lists[c].appendChild(n.cloneNode(true));
+	}
+}
+
+</script>
+
+<script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
+
+</body>
+</head>

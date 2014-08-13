@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GMC Canyon File Upload Prototype</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+
+    <style type="text/css">
+
+    body {
+    	font-family: Arial, sans-serif;
+    	margin: 0;
+    	padding: 0;
+    	color: #000000;
+        font-size: 10pt;
+    }
+
+    * {
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    input {
+    	background-color: white;
+    	color: #000;
+    	padding: 10px;
+    	width: 100%;
+        border-bottom: 1px dashed rgba(0, 0, 0, 0.2);
+        margin-bottom: 20px;
+    }
+
+    input:focus {
+        outline: none;
+    }
+
+    canvas, div, section {
+        margin: 20px 10% 20px 10%;
+        background-color: rgba(0, 0, 0, 0.05);
+        border: 1px dashed rgba(0, 0, 0, 0.2);
+    }
+
+    div, section {
+        width: 80%;
+        min-height: 20px;
+    }
+
+    img {
+        width: 100%;
+        height: auto;
+    }
+
+    h4 {
+        margin: 0 0 0 10%;
+    }
+
+    div {
+        background-size: cover;
+    }
+
+    .info {
+        padding: 10px;
+        line-height: 1.5;
+    }
+
+    </style>
+
+</head>
+<body>
+
+	<input type="file" value="Take photo" accept="image/*;capture=camera">
+
+    <h4>Image</h4>
+    <div class="image-container"></div>
+    <h4>CSS Background</h4>
+    <div class="bg"></div>
+    <h4>Canvas</h4>
+	<canvas></canvas>
+    <h4>Info</h4>
+	<section class="info"></section>
+
+	<script type="text/javascript">
+
+		var input = document.querySelector('input[type="file"]');
+		var info = document.querySelector('.info');
+		var image = new Image();
+        var imagePh = document.querySelector('.image-container');
+        var canvas = document.querySelector('canvas');
+		var div = document.querySelector('.bg');
+
+		var ctx = canvas.getContext('2d');
+
+        var addInfo = function() {
+            var args = Array.prototype.slice.call(arguments).join(' ');
+
+            info.innerHTML += args + '<br>';
+        }
+
+		input.addEventListener('change', function(e) {
+			var selectedFile = event.target.files[0];
+			var reader = new FileReader();
+
+            addInfo(selectedFile.name);
+			addInfo("size", selectedFile.size);
+            console.log(selectedFile);
+
+			reader.addEventListener('load', function(event) {
+                var src = event.target.result;
+
+                console.log(event.target);
+
+				image.src = src;
+
+                var cw = window.innerWidth * 0.8;
+                var ch = image.height / image.width * cw;
+
+                div.style.height = ch + 'px';
+                div.style.backgroundImage = 'url("' + src + '")';
+
+                canvas.width = cw * 2;
+                canvas.height = ch * 2;
+
+                canvas.style.width = cw + "px";
+                canvas.style.height = ch + "px";
+
+                ctx.drawImage(image, 
+                    0, 0, 
+                    image.width, image.height,
+                    0, 0, 
+                    canvas.width, canvas.height
+                );
+
+                imagePh.appendChild(image);
+
+                addInfo('width', image.width);
+                addInfo('height', image.height);
+			});
+
+  			reader.readAsDataURL(selectedFile);
+		});
+
+	</script>
+
+</body>
+</html>

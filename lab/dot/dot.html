@@ -1,0 +1,48 @@
+<!--
+	b-dot
+
+	A basic component that allows to place cicrular dots in the document. Usage:
+
+	<b-dot src="image.jpg"></b-dot>
+
+	'src' is optional. Background color and size can be styled with CSS.
+
+	====
+
+	First, we define the default style for our component.
+	Ideally we can use ":host" pseudo element instead of 
+	declaring style for the tag, but the polyfill doesn't
+	seem to deal correctly with this now (works ok in Chrome 36 though)
+-->
+<style type="text/css">
+
+	b-dot {
+		border-radius: 50%;
+		display: block;
+		width: 100px;
+		height: 100px;
+		background-size: cover;
+		background-color: #000000;
+	}
+
+</style>
+
+<!--
+	Create the prototype object and register the element.
+	The prototype only listens of 'created' callback, looks for the src attribute
+	and assings the image to the backgroundImage css property.
+-->
+
+<script type="text/javascript">
+
+	var dotProto = Object.create(HTMLElement.prototype);
+	var doc = (document._currentScript || document.currentScript).ownerDocument;
+
+	dotProto.createdCallback = function() {
+		var src = this.getAttribute('src');
+		if(src) this.style.backgroundImage = 'url(' + src + ')';
+	};
+
+	document.registerElement('b-dot', { prototype: dotProto });
+
+</script>
