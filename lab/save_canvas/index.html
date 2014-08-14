@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>camera brick</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+
+<style type="text/css">
+
+	body {
+		margin: 20px;
+		background-color: #000;
+		color: #fff;
+		padding: 0;
+		font-family: Arial, sans-serif;
+		font-size: 10pt;
+	}
+
+	* {
+		-webkit-box-sizing: border-box;
+		box-sizing: border-box;
+	}
+
+	canvas {
+		width: 100%;
+		background-color: #fff;
+	}
+
+	canvas:hover, canvas:active, canvas:focus {
+		cursor: pointer;
+	}
+
+	button {
+		margin-top: 20px;
+		background-color: #f00;
+		border: none;
+		color: white;
+		font-weight: normal;
+		letter-spacing: 0.05em;
+		padding: 10px 20px 10px 20px;
+		border-radius: 5px;
+		font-size: 1em;
+		text-transform: lowercase;
+		text-shadow: 1px 1px rgba(0,0,0,0.2);
+	}
+
+	button:hover, button:active, button:focus, input:hover, input:active,  {
+
+		cursor: pointer;
+		outline: none;
+		background-color: #fff;
+		color: #800000;
+	}
+
+	input:focus {
+		margin-top: 20px;
+		outline: none;
+		background-color: #ffffda;
+		border: 1px solid #ff8000;
+	}
+
+	input {
+		border-radius: 5px;
+		font-size: 1em;
+		border: 1px solid rgba(0,0,0,0.2);
+		padding: 10px 10px 10px 10px;
+	}
+
+	a {
+		margin-left: 3em;
+		color: white;
+	}
+
+</style>
+
+</head>
+<body>
+
+<canvas></canvas>
+
+<input value="sketch.png">
+<button>Save</button>
+
+<script>
+	
+	var canvas = document.querySelector('canvas');
+	var button = document.querySelector('button');
+	var input = document.querySelector('input');
+
+	var ch = Math.min(window.innerHeight - 160, window.innerWidth - 40);
+	var offset = 20;
+
+	canvas.width = window.innerWidth - 40;
+	canvas.height = ch;
+	canvas.style.height = ch + 'px';
+
+	var ctx = canvas.getContext('2d');
+
+	ctx.fillStyle = '#ffffff';
+	ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+	ctx.strokeStyle = 'rgba(0, 0, 0, 1)';
+	ctx.lineWidth = 4;
+
+	var drawing = false;
+	var sx, sy;
+
+	var start = function(e) {
+		drawing = true;
+
+		var ex = (e.targetTouches) ? e.targetTouches[0].pageX : e.pageX;
+		var ey = (e.targetTouches) ? e.targetTouches[0].pageY : e.pageY;
+
+		sx = ex - offset, sy = ey - offset;
+	}
+
+	var draw = function(e) {
+		if(!drawing) return;
+
+		var ex = (e.targetTouches) ? e.targetTouches[0].pageX : e.pageX;
+		var ey = (e.targetTouches) ? e.targetTouches[0].pageY : e.pageY;
+
+		ctx.beginPath();
+		ctx.moveTo(sx, sy);
+		ctx.lineTo(ex - offset, ey - offset);
+		ctx.stroke();
+
+		sx = ex - offset, sy = ey - offset;
+	}
+
+	var stop = function(e) {
+		drawing = false;
+	}
+
+	document.addEventListener('mousedown', start);
+	document.addEventListener('mousemove', draw);
+	document.addEventListener('mouseup', stop);
+
+	document.addEventListener('touchstart', start);
+	document.addEventListener('touchmove', draw);
+	document.addEventListener('touchstop', stop);
+
+	button.addEventListener('click', function() {
+
+		var b64 = canvas.toDataURL();
+
+		var link = document.createElement('a');
+		link.setAttribute('download', input.value);
+		link.setAttribute('href', b64);
+		link.click();
+
+	});
+
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
