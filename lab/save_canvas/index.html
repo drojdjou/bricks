@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>camera brick</title>
+<title>save canvas brick</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+<meta charset="utf-8">
 
 <style type="text/css">
 
@@ -70,6 +71,10 @@
 		color: white;
 	}
 
+	.link-container {
+		display: inline-block;
+	}
+
 </style>
 
 </head>
@@ -79,12 +84,14 @@
 
 <input value="sketch.png">
 <button>Save</button>
+<div class="link-container"></div>
 
 <script>
 	
 	var canvas = document.querySelector('canvas');
 	var button = document.querySelector('button');
 	var input = document.querySelector('input');
+	var linkContainer = document.querySelector('.link-container');
 
 	var ch = Math.min(window.innerHeight - 160, window.innerWidth - 40);
 	var offset = 20;
@@ -146,8 +153,13 @@
 		var link = document.createElement('a');
 		link.setAttribute('download', input.value);
 		link.setAttribute('href', b64);
-		link.click();
+		link.setAttribute('target', '_blank');
 
+		// link.innerHTML = "Download...";
+		// linkContainer.innerHTML = "";
+		// linkContainer.appendChild(link);
+
+		link.click();
 	});
 
 </script>

@@ -108,9 +108,19 @@
 
     var fs = document.querySelector('#fs');
 
+    var isFullScreen = false;
+
     fs.addEventListener('click', function() {
-        if(!document.webkitFullScreen) document.body.webkitRequestFullScreen();
-        else document.body.webkitExitFullscreen();
+        console.log('isFullScreen', isFullScreen);
+
+        if(!isFullScreen) {
+            document.body.webkitRequestFullscreen();
+            isFullScreen = true;
+        } else {
+            document.webkitExitFullscreen();
+            isFullScreen = false;
+        }
+        
     });
 
     window.addEventListener('resize', function() {
@@ -146,6 +156,8 @@
         if(!gl.getShaderParameter(fs, gl.COMPILE_STATUS)) console.error("SHADER COMPILE ERROR", gl.getShaderInfoLog(fs));
         if(!gl.getProgramParameter(program, gl.LINK_STATUS)) console.error("SHADER LINKING ERROR", gl.getProgramInfoLog(program));
 
+        gl.useProgram(program);
+
         program.aVertexPosition = gl.getAttribLocation(program, "aVertexPosition");
         program.aTextureCoord = gl.getAttribLocation(program, "aTextureCoord");
         gl.enableVertexAttribArray(program.aVertexPosition);
@@ -179,7 +191,7 @@
         gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
         gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
 
-        gl.useProgram(program);
+        
 
         // size of the position attribute (x,y)
         posSize = 2;
@@ -220,7 +232,6 @@
 
         // uniform vec3 colorOffset;
         // uniform vec2 mousePos;
-        // uniform float noiseScale;
         // uniform float uTime;
         gl.uniform3fv(program.colorOffset, [-0.02, 0.00, 0.02]);        
         gl.uniform2fv(program.mousePos, [interactor.centerX * 2, interactor.centerY * 2]);             
@@ -244,8 +255,6 @@
     }
 
     var setupTexture = function() {
-
-        console.log('setupTexture');
 
         gl.bindTexture(gl.TEXTURE_2D, texture);
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
