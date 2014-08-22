@@ -31,9 +31,14 @@ a:hover {
     width: 50%;
   }
 }
-@media (min-width: 1000px) {
+@media (min-width: 900px) {
   .categories > li {
     width: 25%;
+  }
+}
+@media (min-width: 1200px) {
+  .categories > li {
+    width: 20%;
   }
 }
 .links > li {

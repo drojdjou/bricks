@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>microphone brick</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+
+    <style type="text/css">
+
+    body {
+    	font-family: Arial, sans-serif;
+    	margin: 0;
+    	padding: 0;
+    	color: #ffffff;
+        background-color: #000000;
+        font-size: 10pt;
+        overflow: hidden;
+    }
+
+    * {
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    .info {
+        padding: 10px;
+        line-height: 1.5;
+        margin: 20px 10% 20px 10%;
+        background-color: rgba(0, 0, 0, 0.05);
+        border: 1px dashed rgba(0, 0, 0, 0.2);
+        width: 80%;
+        min-height: 20px;
+    }
+
+    .sensor {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        border-radius: 40px;
+        background-color: #800000;
+        width: 80px;
+        height: 80px;
+        margin: -40px 0 0 -40px;
+    }
+
+    .sensor-bar {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        border-radius: 50px;
+        background-color: transparent;
+        width: 100px;
+        height: 100px;
+        border: 1px solid #400000;
+        margin: -50px 0 0 -50px;
+    }
+
+    @media (min-width: 600px) {
+        .sensor-bar {
+            border: 2px solid #400000;
+        }
+    }
+
+    </style>
+
+</head>
+<body>
+
+	<section class="info"></section>
+
+    <div class="sensor"></div>
+    <div class="sensor-bar"></div>
+
+	<script type="text/javascript">
+
+        //
+        navigator.getUserMedia  = navigator.getUserMedia ||
+                                navigator.webkitGetUserMedia ||
+                                navigator.mozGetUserMedia ||
+                                navigator.msGetUserMedia;
+
+        window.AudioContext = window.AudioContext || window.webkitAudioContext;
+        //
+
+        var info = document.querySelector('.info');
+        var sensor = document.querySelector('.sensor');
+        var sensorBar = document.querySelector('.sensor-bar');
+
+        var audioContext = new AudioContext(); 
+        var analyser, microphone; 
+        var maxVolume = 0;
+
+        analyser = audioContext.createAnalyser();  
+        analyser.fftSize = 1024;  
+
+        var analyzerData = new Uint8Array(analyser.frequencyBinCount);
+
+        var setInfo = function() {
+            var args = Array.prototype.slice.call(arguments).join(' ');
+            info.innerHTML = args + '<br>';
+        }
+
+        var onAudioError = function(e) {
+            console.log('onAudioError', e);
+        }
+
+        var onAudioStream = function(stream) {
+            microphone = audioContext.createMediaStreamSource(stream);
+            microphone.connect(analyser);
+
+            // Unless you want to hear the terryfying squeal of the feedback loop, 
+            // leave this line commented out
+            // volume.connect(audioContext.destination);
+
+            run();
+        }
+
+        var run = function() {
+            requestAnimationFrame(run);
+
+            analyser.getByteFrequencyData(analyzerData);
+
+            var activityLevel = 0, binCount = analyser.frequencyBinCount;
+
+            for(var i = 0; i < binCount; i++) {
+                activityLevel += analyzerData[i] / 256;
+            }
+
+            var s = Math.max(0.1, activityLevel / 100);
+
+            maxVolume = Math.max(s, maxVolume);
+            maxVolume *= 0.999;
+
+            sensor.style.webkitTransform = 'scale(' + s + ',' + s + ')';
+            sensorBar.style.webkitTransform = 'scale(' + maxVolume + ',' + maxVolume + ')';
+        }
+
+        navigator.getUserMedia( { audio:true }, onAudioStream, onAudioError);
+
+	</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

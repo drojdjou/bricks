@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>microphone brick (simplified)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+
+    <style type="text/css">
+
+    body {
+    	margin: 0;
+        background-color: #000000;
+    }
+
+    .sensor {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        border-radius: 40px;
+        background-color: #800000;
+        width: 80px;
+        height: 80px;
+        margin: -40px 0 0 -40px;
+    }
+
+    </style>
+
+</head>
+<body>
+
+    <div class="sensor"></div>
+  
+	<script type="text/javascript">
+
+        //
+        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+        window.AudioContext = window.AudioContext || window.webkitAudioContext;
+        // 
+
+        var sensor = document.querySelector('.sensor');
+
+        var audioContext = new AudioContext(); 
+        var analyser, microphone; 
+
+        analyser = audioContext.createAnalyser();  
+        analyser.fftSize = 1024;  
+
+        // per specs: frequencyBinCount = fftSize / 2
+        var analyzerData = new Uint8Array(analyser.frequencyBinCount);
+
+        var onAudioError = function(e) {
+            console.log('onAudioError', e);
+        }
+
+        var onAudioStream = function(stream) {
+            microphone = audioContext.createMediaStreamSource(stream);
+            microphone.connect(analyser);
+            run();
+        }
+
+        var run = function() {
+            requestAnimationFrame(run);
+
+            analyser.getByteFrequencyData(analyzerData);
+
+            var activityLevel = 0, c = analyser.frequencyBinCount;
+
+            for(var i = 0; i < c; i++) {
+                activityLevel += analyzerData[i];
+            }
+
+            var s = 0.25 + activityLevel / 25600;
+            var t = 'scale(' + s + ',' + s + ')';
+
+            sensor.style.transform = t;
+            sensor.style.webkitTransform = t;
+        }
+
+        navigator.getUserMedia( { audio:true }, onAudioStream, onAudioError);
+
+	</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

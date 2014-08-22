@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>client-side upload brick</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+
+    <style type="text/css">
+
+    body {
+    	font-family: Arial, sans-serif;
+    	margin: 0;
+    	padding: 0;
+    	color: #000000;
+        font-size: 10pt;
+    }
+
+    * {
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    input {
+    	background-color: white;
+    	color: #000;
+    	padding: 10px;
+    	width: 100%;
+        border-bottom: 1px dashed rgba(0, 0, 0, 0.2);
+        margin-bottom: 20px;
+    }
+
+    input:focus {
+        outline: none;
+    }
+
+    canvas, div, section {
+        margin: 20px 10% 20px 10%;
+        background-color: rgba(0, 0, 0, 0.05);
+        border: 1px dashed rgba(0, 0, 0, 0.2);
+    }
+
+    div, section {
+        width: 80%;
+        min-height: 20px;
+    }
+
+    img {
+        width: 100%;
+        height: auto;
+    }
+
+    h4 {
+        margin: 0 0 0 10%;
+    }
+
+    div {
+        background-size: cover;
+    }
+
+    .info {
+        padding: 10px;
+        line-height: 1.5;
+    }
+
+    </style>
+
+</head>
+<body>
+
+	<input type="file" value="Upload song" accept="audio/*;capture=microphone">
+
+	<section class="info"></section>
+
+	<script type="text/javascript">
+
+        var input = document.querySelector('input[type="file"]');
+		var info = document.querySelector('.info');
+
+        var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        
+        var source, audioBuffer;
+        var audioPlaying = false;
+
+        var clearInfo = function() {
+            info.innerHTML = '';
+        }
+
+        var addInfo = function() {
+            var args = Array.prototype.slice.call(arguments).join(' ');
+            info.innerHTML += args + '<br>';
+        }
+
+        var addDot = function() {
+            info.innerHTML += '. ';
+        }
+
+        var startSound = function() {
+
+            console.log('start sound');
+
+            source = audioContext.createBufferSource();
+            source.connect(audioContext.destination);
+            source.buffer = audioBuffer;
+            source.loop = true;
+            source.start(0.0);
+            audioPlaying = true;
+            addInfo("start");
+        }
+
+		input.addEventListener('change', function(e) {
+
+            console.log('input.onchange');
+
+			var selectedFile = e.target.files[0];
+			var reader = new FileReader();
+
+            clearInfo();
+            addInfo("name:", selectedFile.name);
+            addInfo("size:", selectedFile.size + ' bytes');
+			addInfo("type:", selectedFile.type);
+
+			reader.addEventListener('load', function(event) {
+                var data = event.target.result;
+
+                console.log('reader.load');
+
+                if(audioPlaying) {
+                    source.stop();
+                    source.disconnect(audioContext.destination);
+                }
+
+                if(audioContext.decodeAudioData) {
+
+                    addInfo("decoding...");
+                    var i = setInterval(function() {
+                        addDot();
+                    }, 250);
+
+                    audioContext.decodeAudioData(data, function(buffer) {
+                        audioBuffer = buffer;
+                        clearInterval(i);
+                        addInfo('<br>done!');
+                        startSound();
+                    }, function(e) {
+                        console.log(e);
+                    });
+                } else {
+                    audioBuffer = audioContext.createBuffer(data, false );
+                    startSound();
+                }
+
+			});
+
+  			reader.readAsArrayBuffer(selectedFile);
+		});
+
+	</script>
+
+</body>
+</html>

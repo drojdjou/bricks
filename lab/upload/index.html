@@ -3,6 +3,7 @@
 <head>
     <title>client-side upload brick</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <meta charset="utf-8">
 
     <style type="text/css">
 
@@ -95,8 +96,10 @@
         }
 
 		input.addEventListener('change', function(e) {
-			var selectedFile = event.target.files[0];
+			var selectedFile = e.target.files[0];
 			var reader = new FileReader();
+
+            console.log(reader, selectedFile);
 
             addInfo(selectedFile.name);
 			addInfo("size", selectedFile.size);

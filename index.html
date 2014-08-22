@@ -14,12 +14,16 @@ var labContent = [
 
 	['spinner', 'components'],
 	['dot', 'components'],
-	['upload', 'misc', 'client side'],
-	['camera', 'misc', 'user stream'],
+	['upload', 'media', 'client side'],
+	['upload_music', 'media', 'client side'],
+	['mic', 'media', 'basic microphone'],
+	['camera', 'media', 'basic camera'],
 	['gl_base', 'gl', 'boilerplate'],
 	['gl_base_tex', 'gl'],
 	['gl_base_video', 'gl'],
 	['save_canvas', 'misc'],
+	['step_scroll', 'misc', 'step by step'],
+	['step_scroll_3d', 'misc', 'infinite rotation']
 
 ];
 
@@ -53,8 +57,8 @@ labContent.sort(function(a, b) {
 	</li>
 
 	<li>
-		<ul class="links css">
-			<li>CSS</li>
+		<ul class="links media">
+			<li>Media</li>
 		</ul>
 	</li>
 
@@ -74,7 +78,7 @@ for(var i = 0; i < labContent.length; i++) {
 	var d = labContent[i][2] || '';
 
 	if(d == '') d = n.replace(/_/g, ' ');
-	else d = n.replace('_', ' ') + ' - ' + d; 
+	else d = n.replace(/_/g, ' ') + ' - ' + d; 
 
 	var l = 'lab/' + n + '/';
 	var t = labContent[i][1].split(',');
