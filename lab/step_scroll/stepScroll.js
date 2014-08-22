@@ -13,7 +13,6 @@ var isTouch = 'ontouchstart' in document;
 
 var snapTimeoutLimit = isTouch ? 100 : 500, snapTimeout;
 
-// sanity check
 console.log(listHeight, stepHeight, window.innerHeight);
 
 document.addEventListener('touchmove', function(e) { 
@@ -21,7 +20,7 @@ document.addEventListener('touchmove', function(e) {
 });
 
 VirtualScroll.on(function(e) {
-	targetY += e.deltaY;
+	targetY += e.deltaY * 0.33;
     targetY = Math.max( (listHeight - window.innerHeight) * -1, targetY);
     targetY = Math.min(0, targetY);
 

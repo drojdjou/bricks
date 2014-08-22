@@ -19,22 +19,13 @@ section {
 
 .box {
 	position: absolute;
-	top: 50%;
-	left: 50%;
+	
+	top: 0;
+	left: 0;
 
-	@box-size: 150px;
+	@box-size: 100%;
 	width: @box-size;
 	height: @box-size;
-	margin: @box-size * -0.5 0 0 @box-size * -0.5;
-
-	@media(min-width: 600px) {
-		@box-size: 300px;
-		width: @box-size;
-		height: @box-size;
-		margin: @box-size * -0.5 0 0 @box-size * -0.5;
-	}
-
-	// -webkit-transform: rotate(45deg);
 }
 
 .slide:nth-of-type(1) .box { background-color: #800000; }
