@@ -43,7 +43,8 @@ vec2 clampUV(vec2 uv, vec2 aspect) {
 	cuv.y = (uv.y / aspect.y) + (aspect.y - 1.0) * 0.5;
 	return cuv;
 }
-               
+    
+// https://github.com/evanw/glfx.js/blob/master/src/filters/fun/colorhalftone.js           
 void main() {
 
 	vec2 uv = clampUV(vTexCoord, uVideoAspect);
