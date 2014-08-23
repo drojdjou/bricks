@@ -75,7 +75,7 @@ body {
   left: 0;
   bottom: 0;
   margin: 0 0 45px 30px;
-  background-image: url(../assets/mobile.svg);
+  background-image: url(../assets/camswap.svg);
 }
 @media (orientation: landscape) and (max-height: 600px) {
   .swapcam {

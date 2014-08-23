@@ -21,11 +21,11 @@
     "version.json"
   ],
   "homepage": "https://github.com/drojdjou/bartekdrozdz.com",
-  "_release": "42b9b93023",
+  "_release": "819ae02943",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "42b9b9302380911ed0833b71a55748e1af01a36e"
+    "commit": "819ae02943075059f9d863c9ac44fe3198b06f97"
   },
   "_source": "git://github.com/drojdjou/bartekdrozdz.com.git",
   "_target": "*",

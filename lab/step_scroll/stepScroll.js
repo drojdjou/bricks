@@ -13,14 +13,19 @@ var isTouch = 'ontouchstart' in document;
 
 var snapTimeoutLimit = isTouch ? 100 : 500, snapTimeout;
 
-console.log(listHeight, stepHeight, window.innerHeight);
+console.log(listHeight + " / 7 = " + stepHeight + " | " + window.innerHeight);
 
 document.addEventListener('touchmove', function(e) { 
     e.preventDefault(); 
 });
 
+VirtualScroll.options({
+    keyStep: (window.innerHeight * 0.5) + 1,
+    mouseMult: 0.33
+});
+
 VirtualScroll.on(function(e) {
-	targetY += e.deltaY * 0.33;
+	targetY += e.deltaY;
     targetY = Math.max( (listHeight - window.innerHeight) * -1, targetY);
     targetY = Math.min(0, targetY);
 
