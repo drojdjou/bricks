@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>decoded audio playback brick</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <meta charset="utf-8">
+    <style type="text/css">
+
+    body {
+    	font-family: monospace;
+    	margin: 0;
+    	padding: 0;
+    	color: #fff;
+        background-color: #000;
+        font-size: 10pt;
+    }
+
+    * {
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    .info {
+        padding: 10px;
+        line-height: 1.5;
+    }
+
+    section {
+        white-space: pre;
+    }
+
+    .start {
+        padding: 10px;
+        margin: 10px 10px 10px 10px;
+        border: 1px dashed white;
+        color: #fff;
+        display: block;
+        text-align: center;
+        background-color: #222;
+    }
+
+    .start:hover, .start:active {
+        color: #f00;
+        background-color: #ddd;
+        border: 1px dashed black;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+    </style>
+
+</head>
+<body>
+
+<div class="start">Start</div>
+<section class="info"></section>
+
+	<script type="text/javascript">
+
+        var info = document.querySelector('.info');
+        var startBtn = document.querySelector('.start');
+
+        var mp3File = '../_assets/clouds.mp3';
+        var oggFile = '../_assets/clouds.ogg';
+
+        var altFile = '../_assets/ultrasyd-drop-the-crap.mp3';
+
+        var log = function(msg) {
+            info.innerHTML += msg + '\n';
+            console.log(msg);
+        };
+
+        
+        var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+        
+
+        log("build 9");
+        log("press 'start' to load, decode and play");
+
+        var start = function(track) {
+            var source = audioContext.createBufferSource();
+            source.connect(audioContext.destination);
+
+            request = new XMLHttpRequest();
+            request.open('GET', track, true);
+            request.responseType = 'arraybuffer';
+            log('loading ' + track);
+
+            request.onload = function() {
+                log('loaded ' + track + ', decoding...');
+                var audioData = request.response;
+
+                audioContext.decodeAudioData(audioData, function(buffer) {
+                    log('decoded ' + track + ', playing...');
+                    source.buffer = buffer;
+                    source.loop = true;
+                    source.start(0);
+                }, function(e) {
+                    log("Error with decoding audio data" + e.err);
+                });
+            }
+
+            request.send();
+        }
+
+        startBtn.addEventListener('click', function(e) {
+            log('starting...');
+            start(mp3File);
+
+            setTimeout(start, 10000, altFile);
+        });
+
+	</script>
+
+<script>
+if(location.host.indexOf('localhost') > -1 || location.host.indexOf('192.168') > -1) {
+    document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>');
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>basic audio playback brick</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <meta charset="utf-8">
+    <style type="text/css">
+
+    body {
+    	font-family: monospace;
+    	margin: 0;
+    	padding: 0;
+    	color: #fff;
+        background-color: #000;
+        font-size: 10pt;
+    }
+
+    * {
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    .info {
+        padding: 10px;
+        line-height: 1.5;
+    }
+
+    section {
+        white-space: pre;
+    }
+
+    .start {
+        padding: 10px;
+        margin: 20px 10px 10px 10px;
+        border: 1px dashed white;
+        color: #fff;
+        display: block;
+        text-align: center;
+        background-color: #222;
+    }
+
+    .start:hover, .start:active {
+        color: #f00;
+        background-color: #ddd;
+        border: 1px dashed black;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 10px;
+    }
+
+    li {
+        display: inline-block;
+    }
+
+    a {
+        color: inherit;
+    }
+
+    a:before {
+        content: '+';
+        margin-right: 0.7em;
+        display: inline-block;
+        text-decoration: none;
+    }
+
+    </style>
+
+</head>
+<body>
+
+<ul>
+    <li><a href="audio.html">Audio Element</a></li>
+    <li><a href="decode.html">DecodeAudio</a></li>
+    <li><a href="clean.html">Clean version</a></li>
+</ul>
+
+<div class="start">Start</div>
+
+<section class="info"></section>
+
+	<script type="text/javascript">
+
+        var info = document.querySelector('.info');
+        var startBtn = document.querySelector('.start');
+
+        var mp3File = '../_assets/clouds.mp3';
+        var oggFile = '../_assets/clouds.ogg';
+
+        var altFile = '../_assets/ultrasyd-drop-the-crap.mp3';
+
+        var log = function(msg) {
+            info.innerHTML += msg + '\n';
+            console.log(msg);
+        };
+
+        
+        var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        var audioElement = document.createElement('audio');
+        var mp3Supported = audioElement.canPlayType('audio/mpeg') != '';
+
+        var source = audioContext.createMediaElementSource(audioElement);
+        source.connect(audioContext.destination);
+
+        log("build 24");
+        log("web audio playback from &lt;audio&gt; element");
+        log("press 'start' to play");
+
+        var start = function() {
+            audioElement.src = (mp3Supported) ? mp3File : oggFile;
+            audioElement.play();
+            // Manipulate the sound later - no need for interaction any more
+            // setTimeout(function() { audioElement.pause(); }, 3000);
+            // setTimeout(function() { audioElement.play(); }, 5000);
+        }
+        
+        audioElement.addEventListener('canplay', function(e) {
+            log('canplay @ ' + audioElement.currentTime);
+        });
+
+        audioElement.addEventListener('canplaythrough', function(e) {
+            log('canplaythrough @ ' + audioElement.currentTime);
+        });
+
+        startBtn.addEventListener('click', function(e) {
+            log('starting...');
+            start();
+        });
+
+	</script>
+
+<script>
+if(location.host.indexOf('localhost') > -1 || location.host.indexOf('192.168') > -1) {
+    document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>');
+}
+</script>
+
+</body>
+</html>

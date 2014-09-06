@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>webfont ttf/otf brick</title>
+
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
+
+<meta charset="UTF-8">
+
+<link rel="stylesheet" type="text/css" href="font-url.css">
+<link rel="stylesheet" type="text/css" href="style.css">
+
+<script type="text/javascript" src="../../lib/bartekdrozdz-com/framework.js"></script>
+
+</head>
+<body>
+
+<div id="orig-text">Sample text</div>
+<canvas id="reg-cnv"></canvas>
+
+<script type="text/javascript">
+
+// Reg canvas
+var setCanvasText = function() {
+
+	var div = document.querySelector('#orig-text');
+	var origText = div.innerText;
+	var canvas = document.querySelector('#reg-cnv');
+	var context = canvas.getContext('2d');
+	
+	var resolution = 2;
+	var fontSize = 40 * resolution;
+	var margin = 10 * resolution;
+	
+	context.font         = 'normal ' + fontSize + 'px UnitedSans';
+	context.textBaseline = 'top'; // top, hanging, middle, alphabetic, ideographic, bottom
+
+	var textWidth = context.measureText(origText).width;
+
+	div.style.width = Math.ceil(textWidth / resolution) + 'px';
+
+	canvas.width = 10 * resolution * 2 + textWidth;
+	canvas.height = 10 * resolution * 2 + fontSize;
+
+	canvas.style.width = (canvas.width / resolution) + 'px';
+	canvas.style.height = (canvas.height / resolution) + 'px';	
+
+	// context.strokeStyle = '#f00';
+	// context.strokeRect(margin, margin, textWidth, fontSize);
+
+	// context.strokeStyle = '#0f0';
+	// context.beginPath();
+	// context.moveTo(10 * resolution, margin);
+	// context.lineTo(10 * resolution + textWidth, margin);
+	// context.stroke();
+
+	context.strokeStyle = '#fff';
+	context.strokeRect(0, 0, canvas.width, canvas.height);
+
+	// set again because updating canvas size clear all the settings
+	context.font         = 'normal ' + fontSize + 'px UnitedSans';
+	context.textBaseline = 'top'; // top, hanging, middle, alphabetic, ideographic, bottom
+
+	context.fillStyle = '#fff';
+	context.strokeStyle = '#fff';
+	context.fillText(origText, margin, margin);
+
+};
+
+
+// The font seems to not be ready before onload
+window.onload = setCanvasText;
+
+</script>
+
+<script>
+/*
+if(location.host.indexOf('localhost') > -1 || location.host.indexOf('192.168') > -1) {
+	document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>');
+}
+*/
+</script>
+
+</body>
+</head>

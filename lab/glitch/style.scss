@@ -78,30 +78,36 @@ section {
 
 .glitch-1 {
 	&:after {
+		animation: noise-anim-1 2s infinite linear alternate-reverse;
 		-webkit-animation: noise-anim-1 2s infinite linear alternate-reverse;
 	}
 
 	&:before {
+		animation: noise-anim-2 3s infinite linear alternate-reverse;
 		-webkit-animation: noise-anim-2 3s infinite linear alternate-reverse;
 	}
 }
 
 .glitch-2 {
 	&:after {
+		animation: noise-anim-2 2s infinite linear alternate-reverse;
 		-webkit-animation: noise-anim-2 2s infinite linear alternate-reverse;
 	}
 
 	&:before {
+		animation: noise-anim-3 3s infinite linear alternate-reverse;
 		-webkit-animation: noise-anim-3 3s infinite linear alternate-reverse;
 	}
 }
 
 .glitch-3 {
 	&:after {
+		animation: noise-anim-3 2s infinite linear alternate-reverse;
 		-webkit-animation: noise-anim-3 2s infinite linear alternate-reverse;
 	}
 
 	&:before {
+		animation: noise-anim-1 3s infinite linear alternate-reverse;
 		-webkit-animation: noise-anim-1 3s infinite linear alternate-reverse;
 	}
 }

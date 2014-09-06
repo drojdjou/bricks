@@ -150,6 +150,8 @@
 
 		var b64 = canvas.toDataURL();
 
+		console.log(b64);
+
 		var link = document.createElement('a');
 		link.setAttribute('download', input.value);
 		link.setAttribute('href', b64);

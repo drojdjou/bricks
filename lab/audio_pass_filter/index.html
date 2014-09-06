@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>biquad filter brick</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no, minimal-ui">
+    <meta charset="utf-8">
+    <style type="text/css">
+
+    body {
+    	font-family: monospace;
+    	margin: 0;
+    	padding: 0;
+    	color: #fff;
+        background-color: #000;
+        font-size: 10pt;
+        overflow: hidden;
+    }
+
+    * {
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    .start {
+        padding: 10px;
+        margin: 10px 10px 10px 10px;
+        border: 1px dashed white;
+        color: #fff;
+        display: block;
+        text-align: center;
+        background-color: #222;
+    }
+
+    .start:hover, .start:active {
+        color: #f00;
+        background-color: #ddd;
+        border: 1px dashed black;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+    input[type=range] {
+        -webkit-appearance: none;
+        outline: none;
+        width: calc(100% - 20px);
+        margin: 30px 10px 30px 10px;
+        background-color: #333;
+        height: 2px;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        background-color: #aaa;
+        width: 40px;
+        height: 40px;
+        border-radius: 20px;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:active {
+        background-color: #fff;
+    }
+
+    .label {
+        padding: 0 10px 10px 10px;
+    }
+
+    .info {
+        padding: 10px;
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 10px;
+        display: block;
+    }
+
+    li {
+        display: inline-block;
+        padding: 10px;
+        border: 1px dashed #555;
+        margin: 5px;
+    }
+
+    li:hover {
+        cursor: pointer;
+    }
+
+    .active {
+        background-color: #fff;
+        color: #000;
+        border: 1px dashed #000;
+    }
+
+    section {
+        white-space: pre-wrap;
+    }
+
+    </style>
+
+</head>
+<body>
+
+<div class="start">Start</div>
+
+<ul class="types">
+    <li class="active">lowpass</li>
+    <li>highpass</li>
+    <li>bandpass</li>
+    <li>lowshelf</li>
+    <li>highshelf</li>
+    <li>peaking</li>
+    <li>notch</li>
+    <li>allpass</li>
+</ul>
+
+<input type="range" min="0" max="1" step="0.01" id="frequency">
+<div class="label">Frequency: <span id="frequency-val">0</span></div>
+
+<input type="range" min="0" max="1" step="0.01" id="quality">
+<div class="label">Quality: <span id="quality-val">0</span></div>
+
+<section class="info">
+</section>
+
+<script type="text/javascript">
+
+    var info = document.querySelector('.info');
+
+    var log = function(msg) {
+        info.innerHTML += msg + '\n';
+        console.log(msg);
+    };
+
+    var startBtn = document.querySelector('.start');
+
+    var frequency = document.querySelector('#frequency');
+    var quality = document.querySelector('#quality');
+
+    var frequencyVal = document.querySelector('#frequency-val');
+    var qualityVal = document.querySelector('#quality-val');
+
+    var types = Array.prototype.slice.apply(document.querySelectorAll('.types li'));
+    
+    types.forEach(function(e, i) {
+        var index = i;
+        var name = e.innerHTML;
+        e.addEventListener('click', function() {
+            types.forEach(function(n) {
+                n.setAttribute('class', (e == n) ? 'active' : '');
+            });
+
+            filter.type = index;//name;
+        });
+    });
+
+    var url = '../_assets/roar2.mp3';
+
+    var context = new (window.AudioContext || window.webkitAudioContext)();
+
+    var filter, source;
+
+    frequency.value = 0.5;
+    quality.value = 0;
+
+    log('build 36');
+    log('context.sampleRate ' + context.sampleRate);
+
+    var start = function(track) {
+        // creting the filter right fter creating audiocontext doesn't seem to work on ios
+        filter = context.createBiquadFilter();
+        filter.connect(context.destination);
+        filter.type = "lowpass";
+
+        source = context.createBufferSource();
+        source.connect(filter);
+
+        request = new XMLHttpRequest();
+        request.open('GET', track, true);
+        request.responseType = 'arraybuffer';
+        log('loading ' + track);
+
+        request.onload = function() {
+            log('decoding');
+            var audioData = request.response;
+
+            context.decodeAudioData(audioData, function(buffer) {
+                source.buffer = buffer;
+                source.loop = true;
+                source.start(0);
+                log('playing');
+            }, function(e) {
+                log("Error with decoding audio data" + e.err);
+            });
+        }
+
+        request.send();
+
+        var e = ('ontouchstart' in document) ? 'touchmove' : 'mousemove';
+        document.addEventListener(e, adjust);
+    }
+
+    startBtn.addEventListener('click', function(e) {
+        start(url);
+    });
+
+    var adjust = function() {
+
+        var q = quality.value * 30;
+        qualityVal.innerHTML = Math.round(q);
+        filter.Q.value = q;
+
+        var minValue = 10;
+        var maxValue = context.sampleRate / 2;
+        var numberOfOctaves = Math.log(maxValue / minValue) / Math.LN2;
+        var multiplier = Math.pow(2, numberOfOctaves * (frequency.value - 1.0));
+        var f = maxValue * multiplier;
+
+        frequencyVal.innerHTML = Math.round(f);
+        filter.frequency.value = f;
+    };
+
+</script>
+
+<script>
+if(location.host.indexOf('localhost') > -1 || location.host.indexOf('192.168') > -1) {
+    document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>');
+}
+</script>
+
+</body>
+</html>

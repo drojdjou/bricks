@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>basic audio playback brick</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <meta charset="utf-8">
+    <style type="text/css">
+
+    body {
+    	font-family: monospace;
+    	margin: 0;
+    	padding: 0;
+    	color: #fff;
+        background-color: #000;
+        font-size: 10pt;
+    }
+
+    * {
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    .start {
+        padding: 10px;
+        margin: 10px 10px 10px 10px;
+        border: 1px dashed white;
+        color: #fff;
+        display: block;
+        text-align: center;
+        background-color: #222;
+    }
+
+    .start:hover, .start:active {
+        color: #f00;
+        background-color: #ddd;
+        border: 1px dashed black;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+    </style>
+
+</head>
+<body>
+
+<div class="start">Start</div>
+
+<section class="info"></section>
+
+<script type="text/javascript">
+
+    var info = document.querySelector('.info');
+    var startBtn = document.querySelector('.start');
+
+    var soundFile = '../_assets/clouds.mp3';
+
+    var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    var audioElement = document.createElement('audio');
+
+    var source = audioContext.createMediaElementSource(audioElement);
+    source.connect(audioContext.destination);
+
+    var start = function() {
+        audioElement.src = soundFile;
+        audioElement.play();
+    }
+
+    startBtn.addEventListener('click', function(e) {
+        start();
+    });
+
+</script>
+
+<script>
+if(location.host.indexOf('localhost') > -1 || location.host.indexOf('192.168') > -1) {
+    document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>');
+}
+</script>
+
+</body>
+</html>

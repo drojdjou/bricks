@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>null and undef exploration brick</title>
+
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
+
+<meta charset="UTF-8">
+
+<style type="text/css">
+	
+	body {
+		background-color: black;
+		color: #00ff00;
+		font-family: monospace;
+	}
+
+</style>
+
+</head>
+<body>
+
+	<div id="log"></div>
+
+	<script type="text/javascript">
+
+		var _log = document.querySelector('#log');
+
+		var log = function(msg) {
+			_log.innerHTML += msg + '<br>';
+		}
+
+		log('Log');
+
+		var nondef;
+		var nullvar = null;
+		var zerovar = 0;
+		var emptyvar = '';
+
+		// This creates error
+		//log('Non existing variable:');
+		//log(typeof(novar));
+
+		log('Non existing variable (thru window)');
+		log(window.novar);
+
+		log('Non existing variable == undefined');
+		log(window.novar == undefined);
+		
+		log('Not defined variable');
+		log(nondef);
+
+		log('Not defined variable == undefined');
+		log(nondef == undefined);
+
+		log('Not defined variable == null');
+		log(nondef == null);
+
+		log('Zero var == null');
+		log(zerovar == null);
+
+		log('Zero var != null');
+		log(zerovar != null);
+
+		log('Zero var == false');
+		log(zerovar == false);
+
+		log('Zero var === false');
+		log(zerovar === false);
+
+		var f = function(m, v) {
+			log('');
+			log(m)
+			log(v);
+			
+			log('v == undefined');
+			log(v == undefined);
+
+			log('v == null');
+			log(v == null);
+
+			log('v == false');
+			log(v == false);
+
+			log('v === false');
+			log(v === false);
+
+			log('v == true');
+			log(v == true);
+
+			log('v !== null');
+			log(v !== null);
+		}
+
+		f('Argument not passed');
+		// Error
+		// f('Argument non-existing', novar);
+		f('Argument non-existing', window.novar);
+		f('Argument nondef', nondef);
+		f('Argument null (explicit)', nullvar);
+		f('Argument 0', zerovar);
+		f('Argument empty', emptyvar);
+
+	</script>
+
+</body>
+</head>
+
+
+
+
+
+
+
+

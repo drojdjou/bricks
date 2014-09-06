@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>document focus brick</title>
+
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
+
+<meta charset="UTF-8">
+
+<style type="text/css">
+	
+	body {
+		background-color: black;
+		color: #00ff00;
+		font-family: monospace;
+	}
+
+</style>
+
+</head>
+<body>
+
+	<div id="log"></div>
+
+	<script type="text/javascript">
+
+		var log = document.querySelector('#log');
+
+		log.innerHTML = "Log<br>";
+
+		window.addEventListener('focus', function() {
+			var n = new Date().toString();
+			var r = '+focus @ ' + n;
+			log.innerHTML += r + '<br>';
+			console.log(r);
+		});
+
+		window.addEventListener('blur', function() {
+			var n = new Date().toString();
+			var r = '-blur @ ' + n;
+			log.innerHTML += r + '<br>';
+			console.log(r);
+		});
+
+	</script>
+
+</body>
+</head>

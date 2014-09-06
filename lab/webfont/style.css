@@ -1,0 +1,12 @@
+body {
+  font-family: UnitedSans;
+  color: #fff;
+  background-color: #000;
+  margin: 20px;
+  font-size: 40px;
+}
+div {
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  margin: 0 0 10px 0;
+}
