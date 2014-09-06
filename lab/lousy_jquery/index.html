@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>jQuery facepalm brick</title>
+
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
+
+<meta charset="UTF-8">
+
+<style type="text/css">
+
+body {
+	background-color: #000;
+	color: #fff;
+	font-family: Arial, sans-serif;
+}
+
+code {
+	white-space: pre;
+	color: #808080;
+}
+
+#doesExist {
+	margin: 20px;
+	padding: 20px;
+	background-color: #800000;
+	display: inline-block;
+}
+
+#existsToo {
+	width: 160px;
+	height: 160px;
+	background-color: #000080;
+}
+
+</style>
+
+<script type="text/javascript" src="../../lib/jquery/dist/jquery.js"></script>
+
+<div id="doesExist">
+	<div id="existsToo"></div>
+</div>
+
+<p>Here's the HTML:</p>
+
+<code>&lt;div id="doesExist"&gt;
+	&lt;div id="existsToo"&gt;&lt;/div&gt;
+&lt;/div&gt;
+</code>
+
+<p>Here's the Javascript:</p>
+
+<code>$('#doesExist').find('#existsToo').click(function() {
+	console.log("You clicked me, yep!");
+});
+
+$('#doesNotExist').find('#existsEvenLess').click(function() {
+	console.log("This will never happen");
+});</code>
+
+</head>
+<body>
+
+<script type="text/javascript">
+
+	$('#doesExist').find('#existsToo').click(function() {
+		console.log("All right, you clicked me!");
+	});
+
+	$('#doesNotExist').find('#existsEvenLess').click(function() {
+		console.log("This will never happen");
+	});
+
+</script>
+
+<script>
+/*
+if(location.host.indexOf('localhost') > -1 || location.host.indexOf('192.168') > -1) {
+	document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>');
+}
+*/
+</script>
+
+</body>
+</head>
