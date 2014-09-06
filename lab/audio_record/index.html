@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>record audio brick</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no, minimal-ui">
+  <meta charset="utf-8">
+  <style type='text/css'>
+
+  body {
+    font-family: monospace;
+  }
+
+    ul { list-style: none; }
+
+    #recordingslist audio { display: block; margin-bottom: 10px; }
+
+    button {
+      padding: 10px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <button onclick="init();">init</button>
+  <button onclick="startRecording(this);">record</button>
+  <button onclick="stopRecording(this);">stop</button>
+  
+  <h2>Recordings</h2>
+  <ul id="recordingslist"></ul>
+  
+  <h2>Log</h2>
+  <pre id="log"></pre>
+
+  <script src="recorder.js"></script>
+
+  <script>
+  function __log(e, data) {
+    log.innerHTML += "\n" + e + " " + (data || '');
+    console.log(e, data);
+  }
+
+  var audio_context;
+  var recorder;
+  var input;
+  var stream;
+  var source;
+
+  var startUserMedia = function(localStream) {
+    stream = localStream;
+    input  = audio_context.createMediaStreamSource(stream);
+    recorder = new Recorder(input);
+    __log('Recorder initialised.');
+  }
+
+  function startRecording(button) {
+    __log('Recording...');
+    // input.connect(audio_context.destination);
+    recorder && recorder.record();
+    
+  }
+
+  function stopRecording(button) {
+    __log('Stopped recording.');
+    // input.disconnect(audio_context.destination);
+    recorder && recorder.stop();
+    stream.stop();
+    playDirectly();
+    recorder.clear();
+  }
+
+  var playDirectly = function() {
+    recorder.exportWAV(function(dv) {
+      playRecording(dv.buffer);
+    });
+  }
+
+  var playRecording = function(audioData) {
+      source = audio_context.createBufferSource();
+
+      var g1 = audio_context.createGain();
+      // g1.playbackRate.value = 2;
+      var g2 = audio_context.createGain();
+      // g2.playbackRate.value = 2;
+
+      console.log(g1);
+
+      source.connect(g1);
+      g1.connect(g2);
+      g2.connect(audio_context.destination);
+
+      audio_context.decodeAudioData(audioData, function(buffer) {
+          __log('decoded, playing...');
+          source.buffer = buffer;
+          source.loop = true;
+          // source.playbackRate.value = 2;
+          source.start(0);
+          console.log(source);
+      }, function(e) {
+          __log("Error with decoding audio data" + e.err);
+      });
+  }
+
+  var errorCallback = function(e) {
+    __log('getUserMedia error: ', e);
+  }
+
+  var init = function() {
+    try {
+      window.AudioContext = window.AudioContext || window.webkitAudioContext;
+      navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
+      audio_context = new AudioContext();
+    } catch (e) {
+      __log('No web audio support in this browser!');
+    }
+
+    __log('start input');
+
+    navigator.getUserMedia({ audio: true }, startUserMedia, errorCallback);
+  };
+
+  __log('build 39');
+
+  </script>
+
+  
+
+<script>
+if(location.host.indexOf('localhost') > -1 || location.host.indexOf('192.168') > -1) {
+    document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>');
+}
+</script>
+</body>
+</html>
