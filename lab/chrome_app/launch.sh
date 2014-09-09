@@ -1,0 +1,1 @@
+/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --load-and-launch-app=/Users/bartekd/Documents/javascript/bricks/lab/chrome_app/

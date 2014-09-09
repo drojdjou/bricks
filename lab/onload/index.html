@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>various onload functions brick</title>
+
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
+
+<meta charset="UTF-8">
+
+<!-- <link rel="stylesheet" type="text/css" href="style.css"> -->
+
+<style type="text/css">
+
+body {
+	background-color: #000;
+	color: #0f0;
+	font-family: monospace;
+	margin: 20px;
+}
+
+img {
+	width: 200px;
+	height: auto;
+	margin: 20px;
+}
+
+</style>
+
+<script type="text/javascript">
+
+	var log = function(m) { info.innerHTML += m + "<br>"; }
+
+	document.addEventListener("DOMContentLoaded", function(event) {
+		log('document.DOMContentLoaded, img.width: ' + img.width);
+	});
+
+	// This will go before body.onload if declared before body, 
+	// but after is declared at the bottom of the document
+	window.addEventListener('load', function() {
+		log('window.onload,  img.width: ' + img.width);
+	});
+
+	var oldschoolBodyOnLoad = function() {
+		log('oldschool body.onload, img.width: ' + img.width);
+	};
+
+</script>
+
+</head>
+<body onload="oldschoolBodyOnLoad()">
+
+<div id="info"></div>
+
+<img src="../_assets/sample-600.jpg">
+
+<script type="text/javascript">
+
+	var info = document.querySelector('#info');
+	var img = document.querySelector('img');
+
+	img.addEventListener('load', function() {
+		log('image.load');
+		log('image.naturalWidth: ' + img.naturalWidth);
+	});
+
+	log('last line of script before &lt;/body&gt; img.width: ' + img.width); 
+	var imgCssWidth = getComputedStyle(img).width;
+	log('getComputedStyle(img).width: ' + imgCssWidth);
+
+</script>
+
+<script>
+/*if(location.host.indexOf('localhost') > -1 || location.host.indexOf('192.168') > -1) {
+	document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>');
+}*/
+</script>
+
+</body>
+</head>

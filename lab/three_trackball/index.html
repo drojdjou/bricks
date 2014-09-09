@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>trackball brick</title>
+
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
+<meta charset="UTF-8">
+
+<script type="text/javascript" src="../../lib/three/build/three.js"></script>
+
+<style type="text/css">
+
+body {
+	background-color: #000;
+	color: #0f0;
+	font-family: monospace;
+	margin: 10px;
+	overflow: hidden;
+}
+
+</style>
+
+</head>
+<body>
+
+<script type="text/javascript" src="../../src/Trackball.js"></script>
+
+<script type="text/javascript">
+
+	var scene = new THREE.Scene();
+	var camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 1000);
+
+	var renderer = new THREE.WebGLRenderer();
+	renderer.setSize(window.innerWidth, window.innerHeight);
+	document.body.appendChild(renderer.domElement);
+
+	var earthGeom = new THREE.SphereGeometry(10, 32, 32);
+	var earthMat = new THREE.MeshLambertMaterial();
+	earthMat.map = THREE.ImageUtils.loadTexture('../_assets/earth_2048.jpg');
+	var earth = new THREE.Mesh(earthGeom, earthMat);
+
+	var moonGeom = new THREE.SphereGeometry(2.7, 16, 16);
+	var moonMat = new THREE.MeshLambertMaterial();
+	moonMat.map = THREE.ImageUtils.loadTexture('../_assets/moon_512.jpg');
+	var moon = new THREE.Mesh(moonGeom, moonMat);
+	moon.position.set(30, 0, 0);
+
+	var moonRoot = new THREE.Object3D();
+
+	var skyGeom = new THREE.SphereGeometry(50, 32, 32);
+	var skyMat = new THREE.MeshBasicMaterial();
+	skyMat.side = THREE.DoubleSide;
+	skyMat.map = THREE.ImageUtils.loadTexture('../_assets/stars_1024.jpg');
+	skyMat.map.wrapS = THREE.RepeatWrapping;
+	skyMat.map.wrapT = THREE.RepeatWrapping;
+	skyMat.map.repeat.set(2, 2);
+	var sky = new THREE.Mesh(skyGeom, skyMat);
+	
+	var sun = new THREE.DirectionalLight( 0xffffff, 1.0 );
+	sun.position.set(-1, 1, 1);
+
+	var amb = new THREE.AmbientLight(0x101010); 
+
+	scene.add(amb);
+	scene.add(earth);
+	scene.add(sky);
+	scene.add(sun);
+	moonRoot.add(moon);
+	earth.add(moonRoot);
+
+	moon.lookAt(earth.position);
+
+	camera.position.z = 45;
+
+	var trackball = new Trackball();
+	var currentRotation = new THREE.Quaternion();
+	var moonRot = 0;
+
+	var render = function () {
+		requestAnimationFrame(render);
+
+		moonRot += 0.001;
+		moonRoot.rotation.y = moonRot;
+
+		currentRotation.slerp(trackball.rotation, 0.05);
+
+		earth.quaternion.copy(currentRotation);
+		sky.quaternion.copy(currentRotation);
+
+		renderer.render(scene, camera);
+	};
+
+	render();
+
+	document.addEventListener('touchmove', function(e) {
+		e.preventDefault();
+	});
+
+</script>
+
+<script>
+if(location.host.indexOf('localhost') > -1 || location.host.indexOf('192.168') > -1) {
+	document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>');
+}
+</script>
+
+</body>
+</head>

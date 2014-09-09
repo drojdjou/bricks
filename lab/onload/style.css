@@ -1,0 +1,12 @@
+body {
+	background-color: #000;
+	color: #0f0;
+	font-family: monospace;
+	margin: 20px;
+}
+
+img {
+	width: 100px;
+	height: auto;
+	margin: 20px;
+}

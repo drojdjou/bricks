@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>accelerometer brick</title>
+
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
+<meta charset="UTF-8">
+
+
+<style type="text/css">
+
+body {
+	background-color: #000;
+	color: #0f0;
+	font-family: monospace;
+	margin: 20px;
+}
+
+#info-acc, #info-gyro {
+	white-space: pre;
+}
+
+#reset {
+	font-size: 0.8em;
+	text-transform: uppercase;
+	border: 1px solid #0f0;
+	margin-top: 20px;
+	padding: 10px 20px 10px 20px;
+	display: inline-block;
+	text-align: center;
+}
+
+</style>
+
+</head>
+<body>
+
+<!-- x: red, y: green, z: blue -->
+
+<div id="info-acc"></div>
+<div id="info-gyro"></div>
+<div id="reset">Reset peak</div>
+
+<!-- lots of good info: http://www.html5rocks.com/en/tutorials/device/orientation/ -->
+
+<script type="text/javascript">
+
+var infoAcc = document.querySelector('#info-acc');
+var infoGyro = document.querySelector('#info-gyro');
+
+var accData = { 
+	// Store last event
+	e: null,
+	x: 0, y: 0, z: 0, 
+	fx: 0, fy: 0, fz: 0,
+	xg: 0, yg: 0, zg: 0,
+	ralpha: 0, rbeta: 0, rgamma: 0
+};
+
+var gyroData = { e: null, a: 0, b: 0, g: 0 };
+
+var first = true, peak = 0;
+
+var runAcc = function() {
+
+	document.querySelector('#reset').addEventListener('click', function() {
+		peak = 0;
+	});
+
+	window.addEventListener('devicemotion', function(e) {
+		accData.e = e;
+	});
+}
+
+var runGyro = function() {
+
+	window.addEventListener('deviceorientation', function(e) {
+		gyroData.e = e;
+	});
+}
+
+var run = function() {
+
+		requestAnimationFrame(run);
+
+		var e = accData.e;
+
+		if(!e) return;
+
+		var v = accData;
+		var a = e.acceleration;
+		var ag = e.accelerationIncludingGravity;
+		var rr = e.rotationRate;
+		var r = ''; 
+
+		var ease = 0.01; 
+
+		if(first) {
+			v.fx = ag.x;
+			v.fy = ag.y;
+			v.fz = ag.z;
+			first = false;
+		}
+
+		v.x += (a.x - v.x) * ease;
+		v.y += (a.y - v.y) * ease;
+		v.z += (a.z - v.z) * ease;
+
+		v.xg += (ag.x - v.xg) * ease;
+		v.yg += (ag.y - v.yg) * ease;
+		v.zg += (ag.z - v.zg) * ease;
+
+		v.ralpha += (rr.alpha - v.ralpha) * ease;
+		v.rbeta += (rr.beta - v.rbeta) * ease;
+		v.rgamma += (rr.gamma - v.rgamma) * ease;
+
+		peak = Math.max(Math.abs(v.x), peak);
+		peak = Math.max(Math.abs(v.y), peak);
+		peak = Math.max(Math.abs(v.z), peak);
+
+		r += 'initial accelertion incl. gravity\n';
+		r += 'x: ' + v.fx.toFixed(2) + ' ';
+		r += 'y: ' + v.fy.toFixed(2) + ' ';
+		r += 'z: ' + v.fz.toFixed(2) + '\n';
+		r += 'peak: ' + peak.toFixed(2) + '\n';
+		r += '\n';
+		r += 'acceleration\n';
+		r += 'x: ' + v.x.toFixed(2) + '\n';
+		r += 'y: ' + v.y.toFixed(2) + '\n';
+		r += 'z: ' + v.z.toFixed(2) + '\n';
+		r += '\n';
+		r += 'acceleration incl. gravity\n';
+		r += 'x: ' + v.xg.toFixed(2) + '\n';
+		r += 'y: ' + v.yg.toFixed(2) + '\n';
+		r += 'z: ' + v.zg.toFixed(2) + '\n';
+		r += '\n';
+		r += 'rotationRate\n';
+		r += 'x: ' + v.ralpha.toFixed(2) + '\n';
+		r += 'y: ' + v.rbeta.toFixed(2) + '\n';
+		r += 'z: ' + v.rgamma.toFixed(2) + '\n';
+		r += '\n';
+
+		infoAcc.innerHTML = r;
+
+		// gyro
+
+		e = gyroData.e;
+
+		if(!e) return;
+
+		v = gyroData;
+
+		v.a += (e.alpha - v.a) * ease;
+		v.b += (e.beta  - v.b) * ease;
+		v.g += (e.gamma - v.g) * ease;
+
+		r = '';
+		r += 'gyro\n';
+		r += 'x: ' + v.a.toFixed(2) + '\n';
+		r += 'y: ' + v.b.toFixed(2) + '\n';
+		r += 'z: ' + v.g.toFixed(2) + '\n';
+		r += '\n';
+
+		infoGyro.innerHTML = r;
+
+}
+
+if('ondevicemotion' in window) {
+	infoAcc.innerHTML = 'accelerometer detected';
+	runAcc();
+} else {
+	infoAcc.innerHTML = 'no window.ondevicemotion event';
+}
+
+if('ondeviceorientation' in window) {
+	infoGyro.innerHTML = 'gyro detected';
+	runGyro();
+} else {
+	infoGyro.innerHTML = 'no window.ondeviceorientation event';
+}
+
+run();
+
+</script>
+
+<script>
+if(location.host.indexOf('localhost') > -1 || location.host.indexOf('192.168') > -1) {
+	document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>');
+}
+</script>
+
+</body>
+</head>
