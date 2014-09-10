@@ -167,15 +167,17 @@
         var fc = analyzer.frequencyBinCount;
         for(var i = 0; i < fc; i++) {
             var f = byteFrequency[i];
-            f *= 1 + (i/fc)/2
+            f *= 1 + (i/fc)/2;
             s += f;
         }
         s = (s / fc) | 0;
 
-        
         var limit = 5;
         if(s < levelHistory[0] && s > 0.15 && levelHistory.length > limit+1) {
-            var m = levelHistory[0] > levelHistory[limit];
+            var m = 
+                levelHistory[0] > levelHistory[limit-2] ||
+                levelHistory[0] > levelHistory[limit-1] ||
+                levelHistory[0] > levelHistory[limit-0];
             if(m) onBeat();
         }
 
