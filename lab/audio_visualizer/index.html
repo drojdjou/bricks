@@ -173,11 +173,8 @@
         s = (s / fc) | 0;
 
         var limit = 5;
-        if(s < levelHistory[0] && s > 0.15 && levelHistory.length > limit+1) {
-            var m = 
-                levelHistory[0] > levelHistory[limit-2] ||
-                levelHistory[0] > levelHistory[limit-1] ||
-                levelHistory[0] > levelHistory[limit-0];
+        if(s < levelHistory[0] && levelHistory.length > limit+1) {
+            var m = levelHistory[0] > levelHistory[limit];
             if(m) onBeat();
         }
 
