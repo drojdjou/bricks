@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>audio analyzer brick</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <meta charset="utf-8">
+    <style type="text/css">
+
+    body {
+    	font-family: monospace;
+    	margin: 0;
+    	padding: 0;
+    	color: #0f0;
+        background-color: #000000;
+        font-size: 10pt;
+    }
+
+    * {
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    .start {
+        padding: 10px;
+        margin: 10px 10px 10px 10px;
+        border: 1px dashed #0f0;
+        display: block;
+        text-align: center;
+        background-color: #222222;
+    }
+
+    .info, a {
+        color: inherit;
+        margin: 10px;
+        display: inline-block;
+    }
+
+    .start:hover, .start:active {
+        color: #f00;
+        background-color: #ddd;
+        border: 1px dashed black;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+    canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -100;
+        background-color: #000000;
+    }
+
+    </style>
+
+</head>
+<body>
+
+<canvas></canvas>
+
+<a href="mic.html">+ using Microphone</a>
+<div class="start">Start build 12</div>
+<div class="info"></div>
+
+<script type="text/javascript">
+
+    var startBtn = document.querySelector('.start');
+    var canvas = document.querySelector('canvas');
+    var info = document.querySelector('.info');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    var context = canvas.getContext('2d');
+
+    var soundFile = '../_assets/clouds.mp3';
+
+    var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+    var source = audioContext.createBufferSource();
+    
+    var analyzer = audioContext.createAnalyser();
+    // possible values 32-2048
+    analyzer.fftSize = 32;
+
+    source.connect(analyzer);
+    analyzer.connect(audioContext.destination);
+
+    console.log('fft', analyzer.fftSize);
+    console.log('fbc', analyzer.frequencyBinCount);
+    console.log('max db', analyzer.maxDecibels);
+    console.log('min db', analyzer.minDecibels);
+
+    var floatFrequency = new Float32Array(analyzer.frequencyBinCount);
+    var byteFrequency = new Uint8Array(analyzer.frequencyBinCount);
+    var floatWave = new Float32Array(analyzer.fftSize);
+    var byteWave = new Uint8Array(analyzer.fftSize);
+
+    var analyze = function() {
+        console.log(arguments);
+    }
+
+    var start = function() {
+
+        request = new XMLHttpRequest();
+        request.open('GET', soundFile, true);
+        request.responseType = 'arraybuffer';
+
+        request.onload = function() {
+            var audioData = request.response;
+
+            audioContext.decodeAudioData(audioData, function(buffer) {
+                source.buffer = buffer;
+                source.loop = true;
+                source.start(0);
+            }, function(e) {
+                console.log("Error with decoding audio data" + e.err);
+            });
+        }
+
+        request.send();
+
+        startBtn.parentNode.removeChild(startBtn);
+        run();
+    }
+
+    var levelHold = 0, beat = 0;
+
+    var run = function() {
+        requestAnimationFrame(run);
+
+        analyzer.getFloatFrequencyData(floatFrequency);
+        analyzer.getByteFrequencyData(byteFrequency);
+
+        analyzer.getFloatTimeDomainData(floatWave);
+        analyzer.getByteTimeDomainData(byteWave);
+
+        var w = window.innerWidth;
+        var h = window.innerHeight;
+
+        context.clearRect(0, 0, w, h);
+
+        context.save();
+        context.scale(1, -1);
+        context.translate(0, -h);
+        u = w / analyzer.frequencyBinCount;
+        var f = analyzer.frequencyBinCount;
+        for(var i = 0; i < f; i++) {
+            var fi = (i / f) * 255;
+            var bi = ((f - i) / f) * 255;
+            context.fillStyle = 'rgb(' + (bi|0) + ',' + (fi|0) + ',0)';
+            context.fillRect(u * i + 1, 1, u - 2, byteFrequency[i]);
+        }
+        context.restore();
+
+        context.strokeStyle = '#ffffff';
+        context.lineWidth = 2;
+        context.beginPath();
+        var of = h/2 - 127;
+        u = w / analyzer.fftSize;
+        context.moveTo(0, of + byteWave[0]);
+        for(var i = 1; i < analyzer.fftSize; i++) {
+            context.lineTo(u * i, of + byteWave[i]);
+        }
+        context.stroke();
+
+        info.innerHTML = 'currentTime: ' + audioContext.currentTime.toFixed(2) + 's';
+    }
+
+    // void getFloatFrequencyData (Float32Array array);
+    // void getByteFrequencyData (Uint8Array array);
+    // void getFloatTimeDomainData (Float32Array array);
+    // void getByteTimeDomainData (Uint8Array array);
+
+    document.addEventListener('keydown', function(e) {
+
+        if(e.keyCode == 'A'.charCodeAt(0)) {
+            console.log(floatFrequency);
+        }
+
+        // http://stackoverflow.com/questions/14169317/interpreting-web-audio-api-fft-results
+        if(e.keyCode == 'Q'.charCodeAt(0)) {
+            
+            var s = [];
+            for(var i = 0; i < analyzer.frequencyBinCount; i++) {
+                s.push((floatFrequency[i] - analyzer.minDecibels));// * (analyzer.maxDecibels - analyzer.minDecibels));
+            }
+            console.log(s);
+        }
+
+        if(e.keyCode == 'S'.charCodeAt(0)) {
+            console.log(byteFrequency);
+        }
+
+        if(e.keyCode == 'D'.charCodeAt(0)) {
+            console.log(floatWave);
+        }
+
+        if(e.keyCode == 'F'.charCodeAt(0)) {
+            console.log(byteWave);
+        }        
+    });
+
+    startBtn.addEventListener('click', start);
+
+</script>
+
+<script>
+if(location.host.indexOf('localhost') > -1 || location.host.indexOf('192.168') > -1) {
+    document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>');
+}
+</script>
+
+</body>
+</html>

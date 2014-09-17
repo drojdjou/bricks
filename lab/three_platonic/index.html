@@ -11,10 +11,15 @@
 <style type="text/css">
 
 body {
-	background-color: #000;
+
+	background-color: #ffffff;
 	color: #0f0;
 	font-family: monospace;
-	margin: 10px;
+	margin: 0;
+}
+
+canvas {
+    background-color: #ffffff;
 }
 
 </style>
@@ -68,8 +73,10 @@ body {
 	lightB.position.set( 1500, 1000, 500 );
 	scene.add(lightB);
 
-    renderer = new THREE.WebGLRenderer();
+    renderer = new THREE.WebGLRenderer({ alpha: true });
     renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.autoClear = true;
+    renderer.autoClearColor = true;
 
     document.body.appendChild(renderer.domElement);
 

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>beat detector brick</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
+    <meta charset="utf-8">
+    <style type="text/css">
+
+    body {
+    	font-family: monospace;
+    	margin: 0;
+    	padding: 0;
+    	color: #0f0;
+        background-color: #000000;
+        font-size: 10pt;
+    }
+
+    * {
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    .start {
+        padding: 10px;
+        margin: 10px 10px 10px 10px;
+        border: 1px dashed #0f0;
+        display: block;
+        text-align: center;
+        background-color: #222222;
+    }
+
+    .bpm {
+        margin: 10px;
+        display: inline-block;
+    }
+
+    .start:hover, .start:active {
+        color: #f00;
+        background-color: #ddd;
+        border: 1px dashed black;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+    canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -100;
+        background-color: #000000;
+    }
+
+    </style>
+
+</head>
+<body>
+
+<canvas></canvas>
+
+<div class="start">Start build 102</div>
+<div class="bpm"></div>
+
+<script type="text/javascript" src="../../src/BeatDetector.js"></script>
+
+<script type="text/javascript">
+
+    var startBtn = document.querySelector('.start');
+    var canvas = document.querySelector('canvas');
+    var bpm = document.querySelector('.bpm');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    var context = canvas.getContext('2d');
+
+    var soundFile = '../_assets/holdon.mp3';
+
+    var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    var source = audioContext.createBufferSource();
+    var analyzer = audioContext.createAnalyser();
+    analyzer.fftSize = 256;
+    source.connect(analyzer);
+    analyzer.connect(audioContext.destination);
+
+    console.log('fft', analyzer.fftSize);
+    console.log('fbc', analyzer.frequencyBinCount);
+    console.log('max db', analyzer.maxDecibels);
+    console.log('min db', analyzer.minDecibels);
+
+    // This is all we need for beat detection
+    // frequencyBinCount = fftSize / 2 (fftSize is set above)
+    var byteFrequency = new Uint8Array(analyzer.frequencyBinCount);
+    var beatDetector = new BeatDetector(analyzer.frequencyBinCount);
+
+    var start = function() {
+        request = new XMLHttpRequest();
+        request.open('GET', soundFile, true);
+        request.responseType = 'arraybuffer';
+
+        request.onload = function() {
+            var audioData = request.response;
+
+            audioContext.decodeAudioData(audioData, function(buffer) {
+                source.buffer = buffer;
+                source.loop = true;
+                source.start(0);
+            }, function(e) {
+                console.log("Error with decoding audio data" + e.err);
+            });
+        }
+
+        request.send();
+
+        startBtn.parentNode.removeChild(startBtn);
+        run();
+    }
+
+    var levelHold = 0, beat = 0;
+
+    var run = function() {
+        requestAnimationFrame(run);
+
+        var w = window.innerWidth;
+        var h = window.innerHeight;
+
+        analyzer.getByteFrequencyData(byteFrequency);
+        beatDetector.update(byteFrequency, audioContext.currentTime);
+
+        var l = beatDetector.level;
+        beat = Math.max(beatDetector.beat, beat);
+        levelHold = Math.max(levelHold, l);
+
+        var bc = (255 * beat) | 0;
+        context.fillStyle = 'rgb(' + bc + ',' + bc + ',' + bc + ')';
+        context.fillRect(0, 0, w, h);
+
+        context.fillStyle = '#f00';
+        context.beginPath();
+        context.arc(w/2, h/2, l, 0, Math.PI * 2);
+        context.fill();
+
+        context.strokeStyle = '#fff';
+        context.lineWidth = 3;
+        context.beginPath();
+        context.arc(w/2, h/2, levelHold, 0, Math.PI * 2);
+        context.stroke();
+        
+        levelHold *= 0.995;
+        beat *= 0.900;
+        
+        bpm.innerHTML = beatDetector.bpm;
+    }
+
+    startBtn.addEventListener('click', start);
+
+</script>
+
+<script>
+if(location.host.indexOf('localhost') > -1 || location.host.indexOf('192.168') > -1) {
+    document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>');
+}
+</script>
+
+</body>
+</html>
