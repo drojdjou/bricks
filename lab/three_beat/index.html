@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>platonic solid brick</title>
+
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
+<meta charset="UTF-8">
+
+<style type="text/css">
+
+body {
+
+	background-color: #000;
+	color: #0f0;
+	font-family: monospace;
+	margin: 0;
+    overflow: hidden;
+}
+
+canvas {
+    background-color: #000;
+}
+
+#container {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#info {
+    position: absolute;
+    margin: 10px;
+    top: 0;
+    left: 0;
+}
+
+</style>
+
+</head>
+<body>
+
+<div id="container"></div>
+<div id="info"></div>
+
+<script type="text/javascript" src="../../lib/three/build/three.js"></script>
+<script type="text/javascript" src="../../src/BeatDetector.js"></script>
+<script type="text/javascript" src="../../src/Trackball.js"></script>
+
+<script type="text/javascript">
+
+    var info = document.querySelector('#info');
+
+    var addInfo = function(m, nobreak) {
+        info.innerHTML += m + (nobreak ? '' : '<br>');
+    }
+
+    var clearInfo = function() {
+        info.innerHTML = '';
+    }
+
+    document.addEventListener('touchmove', function(e) {
+        e.preventDefault();
+    });
+
+    // Audio
+
+    var soundFile = '../_assets/holdon.mp3';
+
+    addInfo('Three audioviz v1.26');
+    addInfo('Tap screen to start');
+    
+
+    var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    var source = audioContext.createBufferSource();
+    var analyzer = audioContext.createAnalyser();
+    analyzer.fftSize = 256;
+    source.connect(analyzer);
+    analyzer.connect(audioContext.destination);
+
+    // This is all we need for beat detection
+    // frequencyBinCount = fftSize / 2 (fftSize is set above)
+    var byteFrequency = new Uint8Array(analyzer.frequencyBinCount);
+    var beatDetector = new BeatDetector(analyzer.frequencyBinCount);
+
+    var levelHold = 0, beat = 0;
+
+    var start = function() {
+
+        addInfo('Loading ' + soundFile);
+
+        document.removeEventListener('click', start);
+        document.documentElement.webkitRequestFullscreen();
+
+        request = new XMLHttpRequest();
+        request.open('GET', soundFile, true);
+        request.responseType = 'arraybuffer';
+
+        request.onload = function() {
+
+            addInfo('loaded, decoding');
+
+            var di = setInterval(function() {
+                addInfo('.', true);
+            }, 1200);
+
+            var audioData = request.response;
+
+            audioContext.decodeAudioData(audioData, function(buffer) {
+
+                clearInterval(di);
+                clearInfo();
+
+                source.buffer = buffer;
+                source.loop = true;
+                source.start(0);
+            }, function(e) {
+                console.log("Error with decoding audio data" + e.err);
+            });
+        }
+
+        request.send();
+
+        initDeform();
+        run();
+    }
+
+    // 3D
+
+	var RADIUS = 60;
+
+    var scene, camera, renderer, lightA, lightB;
+
+    scene = new THREE.Scene();
+
+    camera = new THREE.PerspectiveCamera(75, 0, 1, 10000);
+    camera.position.z = 1200;
+
+    var icoGeom = new THREE.IcosahedronGeometry(RADIUS, 2);
+    var wireIcoGeom = new THREE.IcosahedronGeometry(RADIUS, 1);
+
+    var wireicoMat = new THREE.MeshBasicMaterial({ 
+        color: 0xffffff, wireframe: true, 
+        transparent: true, opacity: 0.2, 
+        wireframeLinewidth: 2
+    });
+    wireico = new THREE.Mesh( wireIcoGeom, wireicoMat );
+    wireico.scale.set(3.1, 3.1, 3.1);
+    
+    // 
+    var icoMat = new THREE.MeshPhongMaterial( 
+    	{ 
+    		color: 0xff8000, 
+    		specular: 0xffffff, 
+    		shininess: 10, 
+    		transparent: false,
+    		opacity: 1,
+    		shading: THREE.FlatShading,
+    		blending: THREE.AdditiveBlending
+    	} 
+    );
+
+    var ico = new THREE.Mesh(icoGeom, icoMat);
+    ico.scale.set(2.75, 2.75, 2.75);
+
+    scene.add(ico, wireico);
+
+    lightA = new THREE.PointLight( 0xffffff, 1 );
+	lightA.position.set( -1500, 0, 1000 );
+	scene.add(lightA);
+
+	lightB = new THREE.PointLight( 0xff0000, 1 );
+	lightB.position.set( 1500, 1000, 500 );
+	scene.add(lightB);
+
+    renderer = new THREE.WebGLRenderer();//{ alpha: true });
+    // renderer.autoClear = true;
+    // renderer.autoClearColor = true;
+
+    document.querySelector('#container').appendChild(renderer.domElement);
+
+    var resize = function() {
+        camera.aspect = window.innerWidth / innerHeight;
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        camera.updateProjectionMatrix();
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    var initDeform = function() {
+        var vs = icoGeom.vertices;
+        var vl = vs.length;
+
+    	for(var i = 0; i < vl; i++) {
+    		vs[i]._anim = {
+    			current: RADIUS,
+    			target: RADIUS,
+    			norm: vs[i].clone(),
+    			friction: 0.9 + Math.random() * 0.05,
+    			attack: 0.05 + Math.random() * 0.05
+    		};
+
+    		vs[i]._anim.norm.normalize();
+    	}
+
+        vs = wireIcoGeom.vertices;
+        vl = vs.length;
+        
+        for(var i = 0; i < vl; i++) {
+            vs[i]._anim = {
+                current: RADIUS * 1.5,
+                target: RADIUS * 1.5,
+                norm: vs[i].clone(),
+                friction: 0.9 + Math.random() * 0.05,
+                attack: 0.05 + Math.random() * 0.05
+            };
+
+            vs[i]._anim.norm.normalize();
+        }
+    }
+
+    var deform = function(beat, level) {
+
+        lightA.intensity = beat;
+        lightB.intensity = level * 0.5;
+
+        var vs = icoGeom.vertices;
+        var vl = vs.length;
+
+    	for(var i = 0; i < vl; i++) {
+    		vs[i]._anim.target = (Math.random() * RADIUS * 6 * beat);
+    	}
+
+        vs = wireIcoGeom.vertices;
+        vl = vs.length;
+
+        for(var i = 0; i < vl; i++) {
+            vs[i]._anim.target = (Math.random() * RADIUS * 4 * level);
+        }
+    }
+
+    var trackball = new Trackball();
+    var currentRotation = new THREE.Quaternion();
+
+    var run = function() {
+
+        requestAnimationFrame(run);
+
+        // Audio
+
+        analyzer.getByteFrequencyData(byteFrequency);
+        beatDetector.update(byteFrequency, audioContext.currentTime);
+
+        var l = beatDetector.level;
+        beat = Math.max(beatDetector.beat, beat);
+        levelHold = Math.max(levelHold, l);
+
+        deform(beat, levelHold/128);
+
+        // console.log(beat.toFixed(2), (levelHold/128).toFixed(2));
+
+        levelHold *= 0.997;
+        beat *= 0.900;
+
+        // 3D
+
+        // console.log(levelHold);
+
+        var vs = icoGeom.vertices;
+        var vl = vs.length;
+
+        for(var i = 0; i < vl; i++) {
+        	var a = vs[i]._anim;
+        	a.current += (a.target - a.current) * a.attack;
+    		a.target *= a.friction;
+    		vs[i].copy(a.norm).multiplyScalar(RADIUS + a.current);
+    	}
+
+        vs = wireIcoGeom.vertices;
+        vl = vs.length;
+
+        for(var i = 0; i < vl; i++) {
+            var a = vs[i]._anim;
+            a.current += (a.target - a.current) * a.attack;
+            a.target *= a.friction;
+            vs[i].copy(a.norm).multiplyScalar(RADIUS + a.current);
+        }
+
+        icoGeom.verticesNeedUpdate = true;
+    	wireIcoGeom.verticesNeedUpdate = true;
+
+        currentRotation.slerp(trackball.rotation, 0.05);
+        wireico.quaternion.copy(currentRotation);
+        ico.quaternion.copy(currentRotation);
+
+        // wireico.rotation.x -= 0.01;
+        // wireico.rotation.y += 0.02;
+        // ico.rotation.x -= 0.01;
+        // ico.rotation.y += 0.02;
+
+        renderer.render( scene, camera );
+
+    }
+
+    document.addEventListener('click', start);
+
+
+</script>
+
+<script>
+if(location.host.indexOf('localhost') > -1 || location.host.indexOf('192.168') > -1) {
+	document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>');
+}
+</script>
+
+</body>
+</head>
