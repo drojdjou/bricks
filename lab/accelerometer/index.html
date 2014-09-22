@@ -72,6 +72,15 @@ var runAcc = function() {
 	});
 }
 
+/*
+
+The HTML5 DeviceOrientation event returns three pieces of data:
+
+- alpha the direction the device is facing according to the compass
+- beta the angle in degrees the device is tilted front-to-back
+- gamma the angle in degrees the device is tilted left-to-right
+
+*/
 var runGyro = function() {
 
 	window.addEventListener('deviceorientation', function(e) {

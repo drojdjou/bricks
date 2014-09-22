@@ -16,6 +16,7 @@ body {
 	color: #0f0;
 	font-family: monospace;
 	margin: 0px;
+	overflow: hidden;
 }
 
 </style>
@@ -37,6 +38,14 @@ body {
 
 	var renderer = new THREE.WebGLRenderer();
 	renderer.setSize(window.innerWidth, window.innerHeight);
+
+	window.addEventListener('resize', function() {
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+
+		renderer.setSize(window.innerWidth, window.innerHeight);
+	});
+
 	document.body.appendChild(renderer.domElement);
 
 	var sun = new THREE.DirectionalLight( 0xffffff, 1.0 );
@@ -90,7 +99,8 @@ body {
 	});
 
 	document.addEventListener('touchmove', function(e) {
-		touchX = (e.targetTouches[0].pageX / window.innerWidth - 0.5) * 2;
+		e.preventDefault();
+		touchX = (e.targetTouches[0].pageX / window.innerWidth - 0.5) * -2;
 		touchY = (e.targetTouches[0].pageY / window.innerHeight - 0.5) * 2;
 	});
 

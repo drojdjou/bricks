@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>css gyro pano brick</title>
+
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
+<meta charset="UTF-8">
+
+<style type="text/css">
+
+body {
+	background-color: #000;
+	overflow: hidden;
+	margin: 0px;
+}
+
+div {
+	user-select: none;
+	-webkit-user-select: none;
+}
+
+.sky {
+	width: 1026px;
+	height: 1026px;
+	background-image: url('../assets/stars_512.jpg');
+	background-size: cover;
+}
+
+</style>
+
+</head>
+<body>
+
+<script type="text/javascript" src="../../lib/three/build/three.min.js"></script>
+<script type="text/javascript" src="../../lib-nobower/three-extras/CSSRenderer.js"></script>
+<script type="text/javascript" src="../../lib-nobower/three-extras/gyro.js"></script>
+<script type="text/javascript" src="../../src/Trackball.js"></script>
+
+<script type="text/javascript">
+
+	var camera, scene, renderer;
+	var geometry, material, mesh;
+
+	var trackball = new Trackball();
+	var currentRotation = new THREE.Quaternion();
+
+	var target = new THREE.Vector3();
+	var current = new THREE.Vector3();
+	var lon = 90, lat = 0;
+	var phi = 0, theta = 0;
+	var touchX, touchY;
+
+	document.addEventListener('mousemove', function(e) {
+		e.preventDefault();
+	});
+
+	var init = function() {
+
+		camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
+		scene = new THREE.Scene();
+
+		var sides = [
+			{
+				url: '../_assets/skybox/front.jpg',
+				position: [ -512, 0, 0 ],
+				rotation: [ 0, Math.PI / 2, 0 ]
+			},
+			{
+				url: '../_assets/skybox/back.jpg',
+				position: [ 512, 0, 0 ],
+				rotation: [ 0, -Math.PI / 2, 0 ]
+			},
+			{
+				url: '../_assets/skybox/up.jpg',
+				position: [ 0,  512, 0 ],
+				rotation: [ Math.PI / 2, 0, Math.PI ]
+			},
+			{
+				url: '../_assets/skybox/down.jpg',
+				position: [ 0, -512, 0 ],
+				rotation: [ - Math.PI / 2, 0, Math.PI ]
+			},
+			{
+				url: '../_assets/skybox/right.jpg',
+				position: [ 0, 0,  512 ],
+				rotation: [ 0, Math.PI, 0 ]
+			},
+			{
+				url: '../_assets/skybox/left.jpg',
+				position: [ 0, 0, -512 ],
+				rotation: [ 0, 0, 0 ]
+			}
+		];
+
+		var root = new THREE.Object3D();
+		scene.add(root);
+
+		root.rotation.x += Math.PI / 2;
+
+		for ( var i = 0; i < sides.length; i ++ ) {
+
+			var side = sides[i];
+
+			var element = document.createElement('img');
+			element.width = 1028;
+			element.src = side.url;
+
+			var object = new THREE.CSS3DObject( element );
+			object.position.fromArray( side.position );
+			object.rotation.fromArray( side.rotation );
+			root.add(object);
+
+		}
+
+		renderer = new THREE.CSS3DRenderer();
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		document.body.appendChild( renderer.domElement );
+
+		run();
+	}
+
+
+	// var rate = new THREE.Vector3();
+	// var camOrient = new THREE.Quaternion();
+	// var rateQ = new THREE.Quaternion();
+
+	window.addEventListener('devicemotion', function(e) {
+
+		// camera.rotation.y += e.rotationRate.gamma / 180 * Math.PI;
+		// camera.rotation.x = e.rotationRate / 180 * Math.PI;
+		// camera.rotation.z = (e.gamma / -180 * Math.PI);
+
+	});
+
+	/*
+
+	The HTML5 DeviceOrientation event returns three pieces of data:
+
+	- alpha the direction the device is facing according to the compass
+	- beta the angle in degrees the device is tilted front-to-back
+	- gamma the angle in degrees the device is tilted left-to-right
+
+	*/
+	window.addEventListener('deviceorientation', function(e) {
+
+		// console.log(e);
+
+		// camera.rotation.order = 'YXZ';
+
+		// camera.rotation.y = e.alpha / 180 * Math.PI;
+		// camera.rotation.x = (e.beta - 90) / 180 * Math.PI;
+		// camera.rotation.z = (e.gamma) / 180 * Math.PI;
+
+	}, false);
+
+	 // gyro.startTracking(function() {
+		// console.log(gyro.getOrientation());
+	// });
+
+	var run = function() {
+		requestAnimationFrame(run);
+
+		// currentRotation.slerp(trackball.rotation, 0.05);
+		// camera.quaternion.copy(currentRotation);
+
+		// console.log(gyro.getOrientation().quaternion);
+
+		// camera.quaternion.copy(gyro.getOrientation().quaternion);
+
+		renderer.render( scene, camera );
+	}
+
+	init();
+	
+</script>
+
+<script>
+if(location.host.indexOf('localhost') > -1 || location.host.indexOf('192.168') > -1) {
+	document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>');
+}
+</script>
+
+</body>
+</head>

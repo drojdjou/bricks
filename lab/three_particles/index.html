@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>three particles brick</title>
+
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
+<meta charset="UTF-8">
+
+<script type="text/javascript" src="../../lib/three/build/three.js"></script>
+<script type="text/javascript" src="../../lib/bartekdrozdz-com/framework.js"></script>
+
+<style type="text/css">
+
+body {
+	background-color: #000;
+	color: #0f0;
+	font-family: monospace;
+	margin: 0px;
+	overflow: hidden;
+}
+
+</style>
+
+</head>
+<body>
+
+<script type="text/javascript">
+
+	var starFieldSize = 500;
+
+	var scene = new THREE.Scene();
+	scene.fog = new THREE.Fog(0x000000, 100, starFieldSize/2);
+
+	var camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 10000);
+
+	var renderer = new THREE.WebGLRenderer();
+	renderer.setSize(window.innerWidth, window.innerHeight);
+
+	window.addEventListener('resize', function() {
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+		renderer.setSize(window.innerWidth, window.innerHeight);
+	});
+
+	document.addEventListener('touchmove', function(e) {
+		e.preventDefault();
+	});
+
+	var targetBeta = 0, beta = 0;
+
+	window.addEventListener('devicemotion', function(e) {
+		targetBeta = e.rotationRate.alpha;
+	});
+
+	document.body.appendChild(renderer.domElement);
+
+	var geometry = new THREE.Geometry();
+
+	var numStars = 3000;
+
+	for(var i = 0; i < numStars; i++) {
+		var x = starFieldSize * Math.random() - starFieldSize/2;
+		var y = starFieldSize * Math.random() - starFieldSize/2;
+		var z = starFieldSize * Math.random() - starFieldSize/2;
+		geometry.vertices.push(new THREE.Vector3(x, y, z));
+	}
+
+	var material = new THREE.PointCloudMaterial({
+		sizeAttenuation: false,
+		color: 0xffffff,
+		size: 16,
+		map: THREE.ImageUtils.loadTexture('particle.png')
+	});
+
+	material.transparent = true;
+	material.blending = THREE.AdditiveBlending;
+
+	var cloud = new THREE.PointCloud();
+	cloud.material = material;
+	cloud.geometry = geometry;
+	cloud.sortParticles = true;
+	scene.add(cloud);
+
+	var skyGeom = new THREE.SphereGeometry(20, 32, 32);
+	var skyMat = new THREE.MeshBasicMaterial();
+	skyMat.side = THREE.DoubleSide;
+	skyMat.map = THREE.ImageUtils.loadTexture('../_assets/galaxy_2048.jpg');
+	skyMat.depthTest = false;
+
+	var sky = new THREE.Mesh(skyGeom, skyMat);
+	scene.add(sky);
+
+	var targetSpeedX = 0, speedX = 0;
+	var targetSpeedY = 0, speedY = 0;
+
+	VirtualScroll.on(function(e) {
+		targetSpeedX = e.deltaY;
+		if(Math.abs(e.deltaX) > 10) targetSpeedY = (e.deltaX > 0) ? e.deltaX - 10 : e.deltaX + 10;
+	});
+
+	var camForward = new THREE.Vector3();
+
+	var render = function () {
+		requestAnimationFrame(render);
+
+		camera.rotation.y += speedY * 0.001;
+		// camera.rotation.x += beta * 0.01;
+
+		camForward.set(0, 0, speedX * 0.25);
+		camera.localToWorld(camForward)
+
+		for(var i = 0; i < numStars; i++) {
+			var p = geometry.vertices[i];
+
+			p.add(camForward);
+
+			var hs = starFieldSize/2;
+			
+			if(p.x < -hs) p.x += starFieldSize;
+			if(p.x >  hs) p.x -= starFieldSize;
+
+			if(p.y < -hs) p.y += starFieldSize;
+			if(p.y >  hs) p.y -= starFieldSize;
+
+			if(p.z < -hs) p.z += starFieldSize;
+			if(p.z >  hs) p.z -= starFieldSize;
+
+			geometry.vertices[i] = p;
+		}
+		
+		beta += (targetBeta - beta) * 0.2;
+		speedX += (targetSpeedX - speedX) * 0.2;
+		speedY += (targetSpeedY - speedY) * 0.5;
+
+		targetSpeedX *= 0.95;
+		targetSpeedY *= 0.99;
+
+		geometry.verticesNeedUpdate = true;
+
+		renderer.render(scene, camera);
+	}
+
+	render();
+
+</script>
+
+<script>
+if(location.host.indexOf('localhost') > -1 || location.host.indexOf('192.168') > -1) {
+	document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>');
+}
+</script>
+
+</body>
+</head>
