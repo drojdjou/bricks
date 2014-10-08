@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Canvas drawable brick</title>
+
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
+<meta charset="UTF-8">
+
+<style type="text/css">
+
+body {
+	background-color: #000;
+	color: #0f0;
+	font-family: monospace;
+	margin: 0;
+}
+
+</style>
+
+</head>
+<body>
+
+<canvas></canvas>
+
+<script type="text/javascript" src="../../src/Drawable.js"></script>
+
+<script type="text/javascript">
+
+var canvas = document.querySelector('canvas');
+
+canvas.width  = window.innerWidth;
+canvas.height = window.innerHeight;
+
+var context = canvas.getContext('2d');
+
+var circle = Drawable.circle('#ff0000', 30);
+circle.x = window.innerWidth * 0.25;
+circle.y = window.innerHeight * 0.5;
+
+var square = Drawable.rect('#008000', 100, 100);
+square.x = window.innerWidth * 0.75;
+square.y = window.innerHeight * 0.5;
+
+var triangle = Drawable.base(function(ctx) {
+	ctx.fillStyle = '#0000dd';
+	ctx.beginPath();
+	ctx.moveTo(-30,  30);
+	ctx.lineTo( 30,  30);
+	ctx.lineTo(  0, -30);
+	ctx.fill();
+});
+
+triangle.x = window.innerWidth *  0.5;
+triangle.y = window.innerHeight * 0.5;
+
+var t = 0;
+
+var run = function() {
+	requestAnimationFrame(run);
+
+	context.clearRect(0, 0, canvas.width, canvas.height);
+
+	t += 0.05;
+
+	var st = Math.sin(t);
+	var ct = Math.cos(t);
+
+	circle.x =  window.innerWidth * 0.25 + 100 * st;
+	circle.y =  window.innerHeight * 0.5 + 100 * ct;
+
+	square.rotation += 0.03;
+
+	triangle.scaleX = 0.8 + st * 0.5;
+	triangle.scaleY = 0.8 + st * 0.5;
+
+	circle.draw(context);
+	square.draw(context);
+	triangle.draw(context);
+}
+
+run();
+
+</script>
+
+<script>
+if(location.host.indexOf('localhost') > -1 || location.host.indexOf('192.168') > -1) {
+	document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>');
+}
+</script>
+
+</body>
+</head>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

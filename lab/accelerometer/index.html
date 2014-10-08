@@ -123,9 +123,9 @@ var run = function() {
 		v.rbeta += (rr.beta - v.rbeta) * ease;
 		v.rgamma += (rr.gamma - v.rgamma) * ease;
 
-		peak = Math.max(Math.abs(v.x), peak);
-		peak = Math.max(Math.abs(v.y), peak);
-		peak = Math.max(Math.abs(v.z), peak);
+		peak = Math.max(Math.abs(a.x), peak);
+		peak = Math.max(Math.abs(a.y), peak);
+		peak = Math.max(Math.abs(a.z), peak);
 
 		r += 'initial accelertion incl. gravity\n';
 		r += 'x: ' + v.fx.toFixed(2) + ' ';
