@@ -1,0 +1,6 @@
+Options +FollowSymLinks
+RewriteEngine On
+RewriteBase /lab/share_fb
+RewriteRule ^(.*)result-red$ index.php
+RewriteRule ^(.*)result-green$ index.php
+RewriteRule ^(.*)result-blue$ index.php

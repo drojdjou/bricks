@@ -1,0 +1,176 @@
+<?php
+
+# Links:
+
+# http://kb.mediatemple.net/questions/85/Using+.htaccess+rewrite+rules#gs
+# https://developers.facebook.com/docs/sharing/best-practices
+
+$host = 'http://' . $_SERVER['SERVER_NAME'];
+$url = $_SERVER['REQUEST_URI'];
+
+$path = "/lab/share_fb/";
+
+$red_url = $path . "result-red";
+$blue_url =  $path . "result-blue";
+$green_url =  $path . "result-green";
+
+$red_image = $host . $path . "red.png";
+$green_image = $host . $path . "green.png";
+$blue_image = $host . $path . "blue.png";
+$grey_image = $host . $path . "grey.png";
+
+$share_url = $host . $path;
+
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Facebook customized share brick</title>
+
+
+<meta property='og:site_name' content='FB Share brick'/>
+
+<?php 
+
+switch($url) {
+	case $red_url:
+		echo "<meta property='og:title' content='Sharing the red result page'/>\n";
+		echo "<meta property='og:image' content='" . $red_image . "'/>\n";
+		echo "<meta property='og:url' content='" . $host . $red_url . "'/>\n";
+		$share_url = $host . $red_url;
+	break;
+
+	case $green_url:
+		echo "<meta property='og:title' content='Sharing the green result page'/>\n";
+		echo "<meta property='og:image' content='" . $green_image . "'/>\n";
+		echo "<meta property='og:url' content='" . $host . $green_url . "'/>\n";
+		$share_url = $host . $green_url;
+	break;
+
+	case $blue_url:
+		echo "<meta property='og:title' content='Sharing the blue result page'/>\n";
+		echo "<meta property='og:image' content='" . $blue_image . "'/>\n";
+		echo "<meta property='og:url' content='" . $host . $blue_url . "'/>\n";
+		$share_url = $host . $blue_url;
+	break;
+
+	default:
+		echo "<meta property='og:title' content='Sharing the homepage'/>\n";
+		echo "<meta property='og:image' content='" . $grey_image . "'/>\n";
+		echo "<meta property='og:url' content='" . $host . $path . "'/>\n";
+	break;
+}
+
+?>
+
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
+<meta charset="UTF-8">
+
+<style type="text/css">
+
+body {
+	background-color: #000;
+	color: #00bb00;
+	font-family: monospace;
+	margin: 20px;
+	font-size: 14px;
+}
+
+a {
+	color: inherit;
+	line-height: 1.5;
+}
+
+ul {
+	list-style-type: none;
+	padding: 0;
+}
+
+h1 {
+	font-size: 1em;
+	text-transform: uppercase;
+	font-weight: normal;
+}
+
+button {
+	background-color: #005dbd;
+	color: #ffffff;
+	border: 0;
+	padding: 8px 20px 8px 20px;
+	border-radius: 5px;
+	text-shadow: 1px 1px 1px black;
+	outline: none;
+}
+
+</style>
+
+</head>
+<body>
+
+	<h1>Facebook share test</h1>
+
+	<em>Current result page: </em>
+
+	<?php 
+
+	switch($url) {
+		case $red_url:
+			echo "red";
+		break;
+
+		case $green_url:
+			echo "green";
+		break;
+
+		case $blue_url:
+			echo "blue";
+		break;
+
+		default:
+			echo "none, this is the default page";
+		break;
+	}
+
+
+	?>
+
+	</em>
+
+	<ul>
+		<li><a href="index.php">home</a></li>
+		<li><a href="result-red">red</a></li>
+		<li><a href="result-blue">blue</a></li>
+		<li><a href="result-green">green</a></li>
+	</ul>
+
+	<ul>
+		<li>SERVER_NAME: <?=$host?></li>
+	</ul>
+
+	<p><button id="fb">SHARE ON FB</button></p>
+
+<script type="text/javascript">
+
+
+var fbbtn = document.querySelector('#fb');
+
+fbbtn.addEventListener('click', function(e) {
+
+	var url = 'https://www.facebook.com/sharer/sharer.php?u=<?=$share_url;?>';
+	var target = '_blank';
+	var opts = 'height=400,width=600';
+
+	window.open(url, target, opts);
+});
+
+</script>
+
+<script>
+if(location.host.indexOf('localhost') > -1 || location.host.indexOf('192.168') > -1) {
+	document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>');
+}
+</script>
+
+</body>
+</head>
