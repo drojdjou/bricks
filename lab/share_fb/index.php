@@ -4,6 +4,7 @@
 
 # http://kb.mediatemple.net/questions/85/Using+.htaccess+rewrite+rules#gs
 # https://developers.facebook.com/docs/sharing/best-practices
+# https://developers.facebook.com/tools/debug/og/object/
 
 $host = 'http://' . $_SERVER['SERVER_NAME'];
 $url = $_SERVER['REQUEST_URI'];
@@ -126,6 +127,10 @@ if(isRed || isGreen || isBlue) {
 
 	<h1>Facebook share test</h1>
 
+	<p>Home is the entry page to the applicstion and the only page the user will actuall see. The red, green and blue pages are custom share pages. If user hits this page he gets redirected back to the home page using JS.</p>
+
+	<p>The buttons below allow to share each page separately. Regardless which page is shared, when someone clicks on the link shared on their Facebook wall, he will be redirected back to the home page.</p>
+
 	<em>Current result page: </em>
 
 	<?php 
@@ -164,20 +169,12 @@ if(isRed || isGreen || isBlue) {
 		<li>SERVER_NAME: <?=$host?></li>
 	</ul>
 
-	<p><button id="fb">Share current</button></p>
 	<p><button id="fb-m">Share main</button></p>
-	<p><button id="fb-r">SHARE red</button></p>
-	<p><button id="fb-g">SHARE green</button></p>
-	<p><button id="fb-b">SHARE blue</button></p>
+	<p><button id="fb-r">Share red</button></p>
+	<p><button id="fb-g">Share green</button></p>
+	<p><button id="fb-b">Share blue</button></p>
 
 <script type="text/javascript">
-
-document.querySelector('#fb').addEventListener('click', function(e) {
-	var url = 'https://www.facebook.com/sharer/sharer.php?u=<?=$share_url;?>';
-	var target = '_blank';
-	var opts = 'height=400,width=600';
-	window.open(url, target, opts);
-});
 
 document.querySelector('#fb-m').addEventListener('click', function(e) {
 	var url = 'https://www.facebook.com/sharer/sharer.php?u=<? echo $host . $path; ?>';
