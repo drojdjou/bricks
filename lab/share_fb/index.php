@@ -37,32 +37,30 @@ switch($url) {
 	case $red_url:
 		echo "<meta property='og:title' content='Sharing the red result page'/>\n";
 		echo "<meta property='og:image' content='" . $red_image . "'/>\n";
-		// echo "<meta property='og:url' content='" . $host . $red_url . "'/>\n";
+		echo "<meta property='og:url' content='" . $host . $red_url . "'/>\n";
 		$share_url = $host . $red_url;
 	break;
 
 	case $green_url:
 		echo "<meta property='og:title' content='Sharing the green result page'/>\n";
 		echo "<meta property='og:image' content='" . $green_image . "'/>\n";
-		// echo "<meta property='og:url' content='" . $host . $green_url . "'/>\n";
+		echo "<meta property='og:url' content='" . $host . $green_url . "'/>\n";
 		$share_url = $host . $green_url;
 	break;
 
 	case $blue_url:
 		echo "<meta property='og:title' content='Sharing the blue result page'/>\n";
 		echo "<meta property='og:image' content='" . $blue_image . "'/>\n";
-		// echo "<meta property='og:url' content='" . $host . $blue_url . "'/>\n";
+		echo "<meta property='og:url' content='" . $host . $blue_url . "'/>\n";
 		$share_url = $host . $blue_url;
 	break;
 
 	default:
 		echo "<meta property='og:title' content='Sharing the homepage'/>\n";
 		echo "<meta property='og:image' content='" . $grey_image . "'/>\n";
-		// echo "<meta property='og:url' content='" . $host . $path . "'/>\n";
+		echo "<meta property='og:url' content='" . $host . $path . "'/>\n";
 	break;
 }
-
-echo "<meta property='og:url' content='" . $host . $path . "'/>\n";
 
 ?>
 
@@ -109,6 +107,19 @@ button {
 }
 
 </style>
+
+<script type="text/javascript">
+
+var isRed = "<?=$url ?>".indexOf('red') > -1;
+var isGreen = "<?=$url ?>".indexOf('green') > -1;
+var isBlue = "<?=$url ?>".indexOf('blue') > -1;
+
+if(!isRed && !isGreen && !isBlue) {
+	console.log("We're on the home page!");
+}
+
+
+</script>
 
 </head>
 <body>
