@@ -37,32 +37,36 @@ switch($url) {
 	case $red_url:
 		echo "<meta property='og:title' content='Sharing the red result page'/>\n";
 		echo "<meta property='og:image' content='" . $red_image . "'/>\n";
-		echo "<meta property='og:url' content='" . $host . $red_url . "'/>\n";
+		// echo "<meta property='og:url' content='" . $host . $red_url . "'/>\n";
 		$share_url = $host . $red_url;
 	break;
 
 	case $green_url:
 		echo "<meta property='og:title' content='Sharing the green result page'/>\n";
 		echo "<meta property='og:image' content='" . $green_image . "'/>\n";
-		echo "<meta property='og:url' content='" . $host . $green_url . "'/>\n";
+		// echo "<meta property='og:url' content='" . $host . $green_url . "'/>\n";
 		$share_url = $host . $green_url;
 	break;
 
 	case $blue_url:
 		echo "<meta property='og:title' content='Sharing the blue result page'/>\n";
 		echo "<meta property='og:image' content='" . $blue_image . "'/>\n";
-		echo "<meta property='og:url' content='" . $host . $blue_url . "'/>\n";
+		// echo "<meta property='og:url' content='" . $host . $blue_url . "'/>\n";
 		$share_url = $host . $blue_url;
 	break;
 
 	default:
 		echo "<meta property='og:title' content='Sharing the homepage'/>\n";
 		echo "<meta property='og:image' content='" . $grey_image . "'/>\n";
-		echo "<meta property='og:url' content='" . $host . $path . "'/>\n";
+		// echo "<meta property='og:url' content='" . $host . $path . "'/>\n";
 	break;
 }
 
+echo "<meta property='og:url' content='" . $host . $path . "'/>\n";
+
 ?>
+
+
 
 <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
 <meta charset="UTF-8">
@@ -101,6 +105,7 @@ button {
 	border-radius: 5px;
 	text-shadow: 1px 1px 1px black;
 	outline: none;
+	text-transform: uppercase;
 }
 
 </style>
@@ -148,19 +153,46 @@ button {
 		<li>SERVER_NAME: <?=$host?></li>
 	</ul>
 
-	<p><button id="fb">SHARE ON FB</button></p>
+	<p><button id="fb">Share current</button></p>
+	<p><button id="fb-m">Share main</button></p>
+	<p><button id="fb-r">SHARE red</button></p>
+	<p><button id="fb-g">SHARE green</button></p>
+	<p><button id="fb-b">SHARE blue</button></p>
 
 <script type="text/javascript">
 
-
-var fbbtn = document.querySelector('#fb');
-
-fbbtn.addEventListener('click', function(e) {
-
+document.querySelector('#fb').addEventListener('click', function(e) {
 	var url = 'https://www.facebook.com/sharer/sharer.php?u=<?=$share_url;?>';
 	var target = '_blank';
 	var opts = 'height=400,width=600';
+	window.open(url, target, opts);
+});
 
+document.querySelector('#fb-m').addEventListener('click', function(e) {
+	var url = 'https://www.facebook.com/sharer/sharer.php?u=<? echo $host . $path; ?>';
+	var target = '_blank';
+	var opts = 'height=400,width=600';
+	window.open(url, target, opts);
+});
+
+document.querySelector('#fb-r').addEventListener('click', function(e) {
+	var url = 'https://www.facebook.com/sharer/sharer.php?u=<? echo $host . $red_url; ?>';
+	var target = '_blank';
+	var opts = 'height=400,width=600';
+	window.open(url, target, opts);
+});
+
+document.querySelector('#fb-g').addEventListener('click', function(e) {
+	var url = 'https://www.facebook.com/sharer/sharer.php?u=<? echo $host . $green_url; ?>';
+	var target = '_blank';
+	var opts = 'height=400,width=600';
+	window.open(url, target, opts);
+});
+
+document.querySelector('#fb-b').addEventListener('click', function(e) {
+	var url = 'https://www.facebook.com/sharer/sharer.php?u=<? echo $host . $blue_url; ?>';
+	var target = '_blank';
+	var opts = 'height=400,width=600';
 	window.open(url, target, opts);
 });
 
