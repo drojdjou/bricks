@@ -115,7 +115,7 @@ var isGreen = "<?=$url ?>".indexOf('green') > -1;
 var isBlue = "<?=$url ?>".indexOf('blue') > -1;
 
 if(!isRed && !isGreen && !isBlue) {
-	console.log("We're on the home page!");
+	location.href = '<?php echo $host . $path; ?>'
 }
 
 
