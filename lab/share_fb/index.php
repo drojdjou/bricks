@@ -127,9 +127,9 @@ if(isRed || isGreen || isBlue) {
 
 	<h1>Facebook share test</h1>
 
-	<p>Home is the entry page to the applicstion and the only page the user will actuall see. The red, green and blue pages are custom share pages. If user hits this page he gets redirected back to the home page using JS.</p>
+	<p>Home is the entry page to the application and the only page the user will actually see. The red, green and blue pages are custom share pages. If the user hits one of these pages, he gets redirected back to the home page. It done using location.href in JS to bypass the Facebook bot, that apparently can't understand that type of redirection. It can understand both server side redirects and meta refresh.</p>
 
-	<p>The buttons below allow to share each page separately. Regardless which page is shared, when someone clicks on the link shared on their Facebook wall, he will be redirected back to the home page.</p>
+	<p>The buttons bellow allow to share each page separately. Regardless which page is shared, when someone clicks on the link that was shared on their Facebook wall, he will be redirected back to the home page. Red, green and blue pages should never be accesible to the user, unless the user has turned off Javascript.</p>
 
 	<em>Current result page: </em>
 
