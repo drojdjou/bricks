@@ -131,32 +131,7 @@ if(isRed || isGreen || isBlue) {
 
 	<p>The buttons bellow allow to share each page separately. Regardless which page is shared, when someone clicks on the link that was shared on their Facebook wall, he will be redirected back to the home page. Red, green and blue pages should never be accesible to the user, unless the user has turned off Javascript.</p>
 
-	<em>Current result page: </em>
-
-	<?php 
-
-	switch($url) {
-		case $red_url:
-			echo "red";
-		break;
-
-		case $green_url:
-			echo "green";
-		break;
-
-		case $blue_url:
-			echo "blue";
-		break;
-
-		default:
-			echo "none, this is the default page";
-		break;
-	}
-
-
-	?>
-
-	</em>
+	<p>The red, blue and green links below will redirect back to home:</p>
 
 	<ul>
 		<li><a href="index.php">home</a></li>
@@ -165,14 +140,16 @@ if(isRed || isGreen || isBlue) {
 		<li><a href="result-green">green</a></li>
 	</ul>
 
-	<ul>
-		<li>SERVER_NAME: <?=$host?></li>
-	</ul>
+	<p>Use this buttons to share each page. Te result is that, from the user point of view, it's always the home page that is shared, but in each case, a different image and a different message is used.</p>
 
 	<p><button id="fb-m">Share main</button></p>
 	<p><button id="fb-r">Share red</button></p>
 	<p><button id="fb-g">Share green</button></p>
 	<p><button id="fb-b">Share blue</button></p>
+
+	<ul>
+		<li>SERVER_NAME: <?=$host?></li>
+	</ul>
 
 <script type="text/javascript">
 
