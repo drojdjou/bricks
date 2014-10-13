@@ -37,6 +37,7 @@ $share_url = $host . $path;
 switch($url) {
 	case $red_url:
 		echo "<meta property='og:title' content='Sharing the red result page'/>\n";
+		echo "<meta property='og:description' content='This is the red result description. It contains some text related to red.'/>\n";
 		echo "<meta property='og:image' content='" . $red_image . "'/>\n";
 		echo "<meta property='og:url' content='" . $host . $red_url . "'/>\n";
 		$share_url = $host . $red_url;
@@ -44,6 +45,7 @@ switch($url) {
 
 	case $green_url:
 		echo "<meta property='og:title' content='Sharing the green result page'/>\n";
+		echo "<meta property='og:description' content='This is the green result description. It contains some text related to green.'/>\n";
 		echo "<meta property='og:image' content='" . $green_image . "'/>\n";
 		echo "<meta property='og:url' content='" . $host . $green_url . "'/>\n";
 		$share_url = $host . $green_url;
@@ -51,13 +53,15 @@ switch($url) {
 
 	case $blue_url:
 		echo "<meta property='og:title' content='Sharing the blue result page'/>\n";
+		echo "<meta property='og:description' content='This is the blue result description. It contains some text related to blue.'/>\n";
 		echo "<meta property='og:image' content='" . $blue_image . "'/>\n";
 		echo "<meta property='og:url' content='" . $host . $blue_url . "'/>\n";
 		$share_url = $host . $blue_url;
 	break;
 
 	default:
-		echo "<meta property='og:title' content='Sharing the homepage'/>\n";
+		echo "<meta property='og:title' content='Sharing the home page'/>\n";
+		echo "<meta property='og:description' content='This is the home description. It contains general share text.'/>\n";
 		echo "<meta property='og:image' content='" . $grey_image . "'/>\n";
 		echo "<meta property='og:url' content='" . $host . $path . "'/>\n";
 	break;
