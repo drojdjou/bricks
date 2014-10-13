@@ -114,7 +114,7 @@ var isRed = "<?=$url ?>".indexOf('red') > -1;
 var isGreen = "<?=$url ?>".indexOf('green') > -1;
 var isBlue = "<?=$url ?>".indexOf('blue') > -1;
 
-if(!isRed && !isGreen && !isBlue) {
+if(isRed || isGreen || isBlue) {
 	location.href = '<?php echo $host . $path; ?>'
 }
 
