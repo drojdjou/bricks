@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>custom post process brick</title>
+
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
+<meta charset="UTF-8">
+
+<script type="text/javascript" src="../../lib/three/build/three.js"></script>
+<script type="text/javascript" src="three-post.js"></script>
+<script type="text/javascript" src="CustomPost.js"></script>
+
+<style type="text/css">
+
+body {
+	background-color: #000;
+	color: #0f0;
+	font-family: monospace;
+	margin: 0px;
+	overflow: hidden;
+}
+
+</style>
+
+</head>
+<body>
+
+<script type="text/javascript">
+
+	var scene = new THREE.Scene();
+	var camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 1000);
+
+	var mouseY = 0;
+
+	var renderer = new THREE.WebGLRenderer();
+	renderer.setSize(window.innerWidth, window.innerHeight);
+
+	window.addEventListener('resize', function() {
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+		renderer.setSize(window.innerWidth, window.innerHeight);
+	});
+
+	document.addEventListener('touchmove', function(e) {
+		e.preventDefault();
+	});
+
+	document.addEventListener('mousemove', function(e) {
+		mouseY = (e.pageY / window.innerHeight) * 2 - 1;
+	});
+
+	document.body.appendChild(renderer.domElement);
+
+	camera.position.z = 1;
+
+	var sun = new THREE.DirectionalLight(0xff8000, 1);
+	sun.position.set(1, 1, 0);
+	scene.add(sun);
+
+	var moon = new THREE.DirectionalLight(0x808080, 0.5);
+	moon.position.set(0, -1, 1);
+	scene.add(moon);
+
+	var model = new THREE.Mesh();
+	model.material = new THREE.MeshLambertMaterial({ color: 0xffffff });
+
+	new THREE.JSONLoader().load('../_assets/blender/craneo.js', function(geo) {
+		model.geometry = geo;
+		scene.add(model);
+	});
+
+	var composer = new THREE.EffectComposer(renderer);
+	composer.addPass( new THREE.RenderPass( scene, camera ) );
+
+	var effect = new THREE.ShaderPass( THREE.CustomPost );
+	effect.renderToScreen = true;
+	composer.addPass(effect);
+
+	var render = function () {
+		requestAnimationFrame(render);
+		model.rotation.y += 0.01;
+		model.rotation.x = mouseY;
+
+		// renderer.render(scene, camera);
+		composer.render();
+
+	}
+
+	render();
+
+</script>
+
+<script>
+if(location.host.indexOf('localhost') > -1 || location.host.indexOf('192.168') > -1) {
+	document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>');
+}
+</script>
+
+</body>
+</head>

@@ -1,0 +1,126 @@
+@import url(http://fonts.googleapis.com/css?family=Lora);
+@import url(http://fonts.googleapis.com/css?family=Lato:900,400,300italic);
+* {
+  font-size: 12px;
+  line-height: 24px;
+  font-family: Lora;
+  margin: 0;
+  padding: 0;
+  font-weight: 400;
+  box-sizing: border-box;
+}
+section {
+  position: relative;
+  margin-top: 24px;
+  margin-left: 24px;
+  margin-right: 24px;
+}
+@media screen and (min-width: 800px) {
+  section {
+    width: 760px;
+    left: 50%;
+    margin-left: -380px;
+  }
+}
+.image {
+  background-image: url(skull.jpg);
+  background-size: cover;
+  background-position: center;
+  height: 336px;
+  width: 100%;
+  margin-bottom: 24px;
+}
+@media screen and (min-width: 800px) {
+  .image {
+    height: 480px;
+  }
+}
+h1 {
+  font-family: Lato;
+  line-height: 24px;
+  font-size: 20px;
+  font-weight: 900;
+}
+@media screen and (min-width: 600px) {
+  h1 {
+    font-size: 32px;
+    line-height: 48px;
+  }
+}
+@media screen and (min-width: 960px) {
+  h1 {
+    font-size: 44px;
+    line-height: 48px;
+  }
+}
+.meta {
+  margin-bottom: 24px;
+}
+h6 {
+  display: inline-block;
+  font-size: 12px;
+  font-family: Lato;
+  font-weight: 300;
+  font-style: italic;
+}
+.comment {
+  margin-right: 10px;
+}
+.comment:before {
+  display: inline-block;
+  content: url(comment.svg);
+  opacity: 0.6;
+  height: 12px;
+  vertical-align: middle;
+  margin: -9px 5px 0 0;
+  padding: 0;
+}
+p {
+  margin-bottom: 24px;
+}
+@media screen and (min-width: 500px) {
+  p {
+    font-size: 14px;
+  }
+}
+@media screen and (min-width: 800px) {
+  p {
+    font-size: 16px;
+  }
+}
+code {
+  margin-bottom: 24px;
+  font-family: 'Lucida Console', Monaco, monospace;
+  display: block;
+  border-left: 1px solid #808080;
+  color: #808080;
+  padding: 12px 24px 12px 24px;
+  white-space: pre;
+  font-size: 11px;
+}
+@media screen and (min-width: 960px) {
+  code {
+    font-size: 12px;
+  }
+}
+.more {
+  height: 48px;
+  margin-bottom: 24px;
+}
+a {
+  text-decoration: none;
+  border: 1px solid #3990d7;
+  color: #3990d7;
+  padding: 5px 20px 5px 20px;
+  border-radius: 40px;
+  display: inline-block;
+  font-family: Lato;
+  text-transform: uppercase;
+  font-size: 10px;
+  font-weight: 400;
+  margin-top: -10px;
+}
+a:hover {
+  background-color: #3990d7;
+  color: #fff;
+}

@@ -1,0 +1,180 @@
+@import url(http://fonts.googleapis.com/css?family=Lora);
+@import url(http://fonts.googleapis.com/css?family=Lato:900,400,300italic);
+* {
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  outline: none;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+code {
+  margin: 0;
+  padding: 0;
+}
+body {
+  margin: 0;
+  font-family: Lora, Georgia, serif;
+}
+body {
+  font-size: 14px;
+  line-height: 28px;
+}
+@media screen and (min-width: 700px) {
+  body {
+    font-size: 16px;
+    line-height: 32px;
+  }
+}
+@media screen and (min-width: 940px) {
+  body {
+    font-size: 18px;
+    line-height: 36px;
+  }
+}
+.meta,
+p,
+.image,
+code {
+  margin-bottom: 28px;
+}
+@media screen and (min-width: 700px) {
+  .meta,
+  p,
+  .image,
+  code {
+    margin-bottom: 32px;
+  }
+}
+@media screen and (min-width: 940px) {
+  .meta,
+  p,
+  .image,
+  code {
+    margin-bottom: 36px;
+  }
+}
+.more {
+  height: 42px;
+  margin-bottom: 70px;
+}
+@media screen and (min-width: 700px) {
+  .more {
+    height: 48px;
+    margin-bottom: 80px;
+  }
+}
+@media screen and (min-width: 940px) {
+  .more {
+    height: 54px;
+    margin-bottom: 90px;
+  }
+}
+.image {
+  height: 336px;
+}
+@media screen and (min-width: 700px) {
+  .image {
+    height: 384px;
+  }
+}
+@media screen and (min-width: 940px) {
+  .image {
+    height: 432px;
+  }
+}
+section {
+  margin: 28px 20px 28px 20px;
+}
+@media screen and (min-width: 700px) {
+  section {
+    margin: 32px 20px 32px 20px;
+  }
+}
+@media screen and (min-width: 940px) {
+  section {
+    margin: 36px 20px 36px 20px;
+    width: 800px;
+    position: relative;
+    left: 50%;
+    margin-left: -400px;
+  }
+}
+h1 {
+  line-height: 56px;
+}
+@media screen and (min-width: 700px) {
+  h1 {
+    line-height: 64px;
+  }
+}
+@media screen and (min-width: 940px) {
+  h1 {
+    line-height: 72px;
+  }
+}
+h1 {
+  font-family: Lato, Helvetica, Arial, sans-serif;
+  font-weight: 900;
+  font-size: 2.2rem;
+}
+h6 {
+  font-family: Lato, Helvetica, Arial, sans-serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: 0.8em;
+  float: left;
+}
+a {
+  color: inherit;
+}
+.meta {
+  overflow: auto;
+}
+.image {
+  background-image: url(skull.jpg);
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+}
+.more a {
+  text-decoration: none;
+  border: 1px solid #3990d7;
+  color: #3990d7;
+  padding: 5px 15px 5px 15px;
+  border-radius: 40px;
+  display: inline-block;
+  font-family: Lato, Helvetica, Arial, sans-serif;
+  text-transform: uppercase;
+  font-size: 0.7em;
+  font-weight: 400;
+}
+.more a:hover {
+  background-color: #3990d7;
+  color: #fff;
+}
+code {
+  font-family: 'Lucida Console', Monaco, monospace;
+  display: block;
+  border-left: 1px solid #808080;
+  color: #808080;
+  white-space: pre;
+  font-size: 0.85em;
+  padding-left: 1em;
+}
+.comment {
+  margin-right: 10px;
+}
+.comment:before {
+  display: inline-block;
+  content: url(comment.svg);
+  opacity: 0.6;
+  height: 12px;
+  vertical-align: middle;
+  margin: -9px 5px 0 -2px;
+  padding: 0;
+}

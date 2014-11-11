@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>dom template brick</title>
+
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
+<meta charset="UTF-8">
+
+<style type="text/css">
+
+body {
+	background-color: #000;
+	color: #0f0;
+	font-family: monospace;
+	margin: 10px;
+}
+
+</style>
+
+</head>
+<body>
+
+<script type="text/javascript">
+
+var Template = function() {
+
+	var that = this;
+
+	this.content;
+
+	this.set = function(content) {
+		var df = document.createElement('div');
+		df.innerHTML = content;
+		that.content = df.firstChild;
+		return that;
+	}
+
+	this.load = function(path, callback) {
+
+		var request = new XMLHttpRequest();
+		request.open("GET", path);
+
+		request.onreadystatechange = function(){
+			if (request.readyState == 4) {
+				that.set(request.responseText);
+				callback.call(null, that);
+			}
+		};
+
+		request.send();
+		return that;
+	} 
+
+	this.insertText = function(sel, text) {
+		that.content.querySelector(sel).innerText = text;
+	}
+
+	this.appendText = function(sel, text) {
+		that.content.querySelector(sel).innerText += text;
+	}
+
+	this.append = function(sel, elem) {
+		that.content.querySelector(sel).appendChild(elem);
+	}
+
+	this.insertList = function(sel, list, template) {
+		list.forEach(function(e) {
+
+			if(template) {
+				var t = template.content.cloneNode(true);
+				t.innerText = e;
+				that.append(sel, t);
+			} else {
+				that.appendText(sel, e);
+			}
+			
+		});
+	}
+}
+
+var li = new Template().set('<li></li>');
+
+var main = new Template();
+
+
+main.load('fragment.html', function(t) {
+
+	main.insertText('#value', 12);
+	main.insertList('ul', ['A', 'B', 'C'], li);
+	document.body.appendChild(t.content);
+
+});
+
+</script>
+
+<script>
+if(location.host.indexOf('localhost') > -1 || location.host.indexOf('192.168') > -1) {
+	document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>');
+}
+</script>
+
+</body>
+</head>

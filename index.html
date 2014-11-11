@@ -12,15 +12,18 @@
 
 var labContent = [
 
-	['spinner', 'components'],
-	['dot', 'components'],
+	['spinner', 'misc', 'polymer'],
+	['dot', 'misc', 'polymer'],
 	['upload', 'media', 'client side'],
 	['upload_music', 'media', 'client side'],
 	['mic', 'media', 'basic microphone'],
 	['camera', 'media', 'basic camera'],
+
 	['gl_base', 'gl', 'boilerplate'],
 	['gl_base_tex', 'gl'],
 	['gl_base_video', 'gl'],
+	['gl_multi_draw', 'gl'],
+
 	['save_canvas', 'misc'],
 	['step_scroll', 'misc', 'step by step'],
 	['step_scroll_3d', 'misc', 'infinite rotation'],
@@ -28,6 +31,8 @@ var labContent = [
 	['doc_focus', 'misc'],
 	['null_undef', 'misc'],
 	['fullscreen', 'misc'],
+	['doc_fragment', 'misc'],
+	['youtube_data', 'api'],
 	['webfont', 'canvas'],
 	['drawable', 'canvas'],
 	['vibrate_api', 'mobile'],
@@ -40,11 +45,17 @@ var labContent = [
 	['share_fb', 'misc', 'custom share on Facebook'],
 	['accelerometer', 'mobile'],
 	['gif_js', 'media'],
+
 	['three_trackball', 'three'],
 	['three_platonic', 'three'],
 	['three_beat', 'three'],
-	['three_blender', 'three'],
-	['three_css_gyro_pano', 'three']
+	['three_blender', 'three', 'model + custom shader'],
+	['three_webcam_refl', 'three', 'webcam used in reflection'],
+	['three_css_gyro_pano', 'three'],
+	['three_particles', 'three'],
+	['three_post', 'three', 'basic post processing'],
+
+	['baseline', 'design']
 
 ];
 
@@ -67,8 +78,8 @@ labContent.sort(function(a, b) {
 		</ul>
 	</li>
 	<li>
-		<ul class="links components">
-			<li>Components</li>
+		<ul class="links design">
+			<li>Design</li>
 		</ul>
 	</li>
 
@@ -93,6 +104,12 @@ labContent.sort(function(a, b) {
 	<li>
 		<ul class="links audio">
 			<li>Audio</li>
+		</ul>
+	</li>
+
+	<li>
+		<ul class="links api">
+			<li>API</li>
 		</ul>
 	</li>
 

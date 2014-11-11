@@ -160,8 +160,8 @@ div {
 	var run = function() {
 		requestAnimationFrame(run);
 
-		// currentRotation.slerp(trackball.rotation, 0.05);
-		// camera.quaternion.copy(currentRotation);
+		currentRotation.slerp(trackball.rotation, 0.05);
+		camera.quaternion.copy(currentRotation);
 
 		// console.log(gyro.getOrientation().quaternion);
 

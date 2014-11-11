@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>youtube data API brick</title>
+
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
+<meta charset="UTF-8">
+
+<style type="text/css">
+
+body {
+	background-color: #000;
+	color: #009000;
+	font-family: monospace;
+	margin: 0px;
+
+	position: absolute;
+	width: 100%;
+	height: 100%;
+}
+
+* {
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+
+textarea {
+	width: 50%;
+	height: 100%;
+	border: 0;
+	position: absolute;
+	top: 0;
+	left: 50%;
+	outline: none;
+	padding: 10px;
+	font-size: 12px;
+	font-family: monospace;
+	background-color: #002000;
+	color: #fff;
+}
+
+input {
+	position: absolute;
+	top: 0%;
+	left: 0%;
+	width: 50%;
+	border: 0;
+	background-color: #005000;
+	color: #000;
+	font-size: 2em;
+	padding: 10px;
+	font-weight: normal;
+	outline: none;
+}
+
+::-webkit-input-placeholder {
+   color: rgba(0,0,0,0.2);
+   font-style: italic;
+}
+
+#info {
+	position: absolute;
+	top: 60px;
+	padding: 10px;
+	width: 50%;
+}
+
+</style>
+
+</head>
+<body>
+
+<input type="text" placeholder="type command and hit enter" id="cmd">
+
+<div id="info"></div>
+
+<textarea id="result"></textarea>
+
+<!-- 
+
+"statistics": {
+    "viewCount": "1670909",
+    "likeCount": "50208",
+    "dislikeCount": "761",
+    "favoriteCount": "0",
+    "commentCount": "6457"
+}
+
+-->
+
+<script type="text/javascript">
+
+var channels = {
+	vsauce: 'UC6nSFpj9HTCZ5t-N3Rm3-HA',
+	vsauce2: 'UCqmugCqELzhIMNYnsjScXXw',
+	vsauc3: 'UCwmFOfFuvRPI112vR5DNnrA'
+};
+
+var playlists = [
+	'PLZRRxQcaEjA6-z3PATyrAfi3U9wvIhLS6'
+]
+
+var info = document.querySelector('#info');
+var input = document.querySelector('#cmd');
+var result = document.querySelector('#result');
+
+var buffer = [];
+
+var help  = "available commands<br>";
+ 	help += "&nbsp;&nbsp;- channel name - loads data from a channel 'name'<br>";
+	help += "&nbsp;&nbsp;- help - display the above message<br>";
+
+
+var log = function(p) {
+	buffer.push('> ' + p);
+	var t = buffer.slice(0, 20);
+	t.reverse();
+	info.innerHTML = t.join('<br>');
+}
+
+var onGapi = function() {
+	log('google api loaded');
+	gapi.client.setApiKey('AIzaSyB_-UtTTcq8xYrSLR5GW-aTtI2ZzZd0IAg');
+	gapi.client.load('youtube', 'v3').then(onYoutube);
+}
+
+var onYoutube = function() {
+	log('youtube api loaded');
+}
+
+log(help);
+
+document.addEventListener('keydown', function(e) {
+	if(e.keyCode != 13) return;
+
+	var q = input.value;
+	input.value = '';
+
+	var request = gapi.client.youtube.search.list({
+		q: q,
+		part: 'snippet'
+	});
+
+	request.execute(function(response) {
+		console.log(response.result);
+		result.value = JSON.stringify(response.result);
+	});
+});
+
+</script>
+
+<script src="https://apis.google.com/js/client.js?onload=onGapi"></script>
+
+<script>
+if(location.host.indexOf('localhost') > -1 || location.host.indexOf('192.168') > -1) {
+	document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>');
+}
+</script>
+
+</body>
+</head>

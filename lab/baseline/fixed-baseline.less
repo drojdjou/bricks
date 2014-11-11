@@ -1,0 +1,151 @@
+@import url(http://fonts.googleapis.com/css?family=Lora);
+@import url(http://fonts.googleapis.com/css?family=Lato:900,400,300italic);
+
+@baseline: 24px;
+
+body {
+	// margin-top: 6px;
+}
+
+* {
+
+	font-size: 12px;
+	line-height: @baseline;
+	font-family: Lora;
+	margin: 0;
+	padding: 0;
+	font-weight: 400;
+	box-sizing: border-box;
+}
+
+section {
+	position: relative;
+
+	@media screen and (min-width:800px) {
+		width: 760px;
+		left: 50%;
+		margin-left: -380px;
+	}
+
+	margin-top: @baseline;
+	margin-left: @baseline;
+	margin-right: @baseline;
+}
+
+.image {
+	background-image: url(skull.jpg);
+	background-size: cover;
+	background-position: center;
+	height: @baseline * 14;
+	width: 100%;
+	margin-bottom: @baseline;
+
+	@media screen and (min-width:800px) {
+		height: @baseline * 20;
+	}
+}
+
+h1 {
+	font-family: Lato;
+	line-height: @baseline;
+	font-size: 20px;
+	font-weight: 900;
+	// margin-bottom: @baseline;
+
+	@media screen and (min-width:600px) {
+		font-size: 32px;
+		line-height: @baseline * 2;
+	}
+
+	@media screen and (min-width:960px) {
+		font-size: 44px;
+		line-height: @baseline * 2;
+	}
+}
+
+.meta {
+	margin-bottom: @baseline;
+}
+
+h6 {
+	display: inline-block;
+	font-size: 12px;
+	font-family: Lato;
+	font-weight: 300;
+	font-style: italic;
+}
+
+.comment {
+	&:before {
+		display: inline-block;
+		content: url(comment.svg);
+		opacity: 0.6;
+		height: 12px;
+		vertical-align: middle;
+		margin: -9px 5px 0 0;
+		padding: 0;
+	}
+
+	margin-right: 10px;
+}
+
+p {
+	margin-bottom: @baseline;
+
+	@media screen and (min-width:500px) {
+		font-size: 14px;
+	}
+
+	@media screen and (min-width:800px) {
+		font-size: 16px;
+		// margin-bottom: @baseline * 2;
+	}
+}
+
+code {
+	margin-bottom: @baseline;
+	font-family: 'Lucida Console', Monaco, monospace;
+	display: block;
+	// background-color: rgba(0, 0, 0, 0.05);
+	border-left: 1px solid #808080;
+	color: #808080;
+	padding: @baseline * 0.5 @baseline @baseline * 0.5 @baseline;
+	white-space: pre;
+	font-size: 11px;
+
+	@media screen and (min-width:960px) {
+		font-size: 12px;
+		// margin-bottom: @baseline * 2;
+	}
+}
+
+.more {
+	height: @baseline * 2;
+	margin-bottom: @baseline;
+}
+
+a {
+	text-decoration: none;
+	border: 1px solid #3990d7;
+	color: #3990d7;
+	padding: 5px 20px 5px 20px;
+	border-radius: 40px;
+	display: inline-block;
+	font-family: Lato;
+	text-transform: uppercase;
+	font-size: 10px;
+	font-weight: 400;
+	margin-top: -10px;
+
+	&:hover {
+		background-color: #3990d7;
+		color: #fff;
+	}
+}
+
+
+
+
+
+
+

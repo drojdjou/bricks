@@ -139,8 +139,8 @@ canvas {
     var wireIcoGeom = new THREE.IcosahedronGeometry(RADIUS, 1);
 
     var wireicoMat = new THREE.MeshBasicMaterial({ 
-        color: 0xffffff, wireframe: true, 
-        transparent: true, opacity: 0.4, 
+        color: 0xff8000, wireframe: true, 
+        transparent: true, opacity: 0.2, 
         wireframeLinewidth: 1
     });
     wireico = new THREE.Mesh( wireIcoGeom, wireicoMat );
@@ -302,7 +302,9 @@ canvas {
 
     }
 
-    document.addEventListener('click', start);
+    // document.addEventListener('click', start);
+    start();
+    info.style.display = 'none';
 
 
 </script>

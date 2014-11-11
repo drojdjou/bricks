@@ -1,0 +1,91 @@
+<script type="text/javascript">
+  // Selecting elements from DOM
+  var e = document.querySelector('#some-element');
+  
+  var es = Array.prototype.slice.call(document.querySelectorAll('.multiple-elements'));
+
+  // Manipulating style
+  e.style.color = '#ff0000';
+
+  // Manipulating DOM
+  var ec = document.createElement('div');
+  e.appendChild(ec);
+
+  es.forEach(function(el, i) {
+    var li = document.createElement('li');
+    li.innerHTML = 'List element '  + i;
+    el.appendChild(li);
+  });
+  
+  // AJAX
+  var request = new XMLHttpRequest();
+  request.open("GET", path);
+  
+  request.onreadystatechange = function(){
+    if (request.readyState == 4) {
+      onLoadedFunc.call(null, request.responseText);
+    }
+  };
+  
+  request.send();
+</script>
+
+<style type="text/css">
+
+/* Simple transition on buttons */
+.button {
+  color: #fff;
+  background-color: #f00;
+  transition: all 0.1s ease;
+}
+
+.button:hover {
+  color: #f00;
+  background-color: #000;
+};
+
+/* CSS Animation (apply in JS) */
+@keyframes fade-in-animation {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  display: block;
+  animation: fade-in-animation 0.3s ease-out;
+}
+
+#animated-element {
+  display: none;
+}
+
+</style>
+
+<script type="text/javascript">
+
+  // Applying CSS animation
+  var a = document.querySelector('#animated-element');
+  a.setAttribute('class', 'fade-in');
+
+  // Touch events
+  var onTouchMove = function(e) {
+    var x = e.targetTouches[0].pageX;
+    var y = e.targetTouches[0].pageY;
+  }
+
+  document.addEventListener("touchstart", onTouchStart);
+  document.addEventListener("touchmove", onTouchMove);
+  document.addEventListener("touchend", onTouchEnd);
+
+</script>
+
+
+
+
+
+
+

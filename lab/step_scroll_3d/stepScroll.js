@@ -1,6 +1,7 @@
 var list = EXT.select('.container');
 
 var slides = EXT.selectAll('.slide');
+
 // slides.forEach(function(e) {
 // 	e.ext.css('height', window.innerHeight + 'px');
 // });
