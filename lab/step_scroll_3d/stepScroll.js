@@ -1,10 +1,13 @@
 var list = EXT.select('.container');
 
-var slides = EXT.selectAll('.slide');
+var boxes = EXT.selectAll('.box');
 
 // slides.forEach(function(e) {
 // 	e.ext.css('height', window.innerHeight + 'px');
 // });
+
+var stepHeight = 360 / boxes.length;
+console.log(boxes.length);
 
 var targetY = 0, stepY = 0, currentY = 0, ease = 0.1;
 
@@ -20,12 +23,13 @@ document.addEventListener('touchmove', function(e) {
 
 VirtualScroll.on(function(e) {
 	targetY += e.deltaY * -0.25;
-    // clearTimeout(snapTimeout);
-    // snapTimeout = setTimeout(snap, snapTimeoutLimit);
+    clearTimeout(snapTimeout);
+    snapTimeout = setTimeout(snap, snapTimeoutLimit);
 });
 
 
 var snap = function() {
+    console.log('snap', targetY, Math.round(targetY / stepHeight) * stepHeight);
     targetY = Math.round(targetY / stepHeight) * stepHeight;
 };
 
