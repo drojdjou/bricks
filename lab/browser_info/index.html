@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>browser info brick</title>
+
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
+<meta charset="UTF-8">
+
+<style type="text/css">
+
+body {
+	background-color: #000;
+	color: #808080;
+	font-family: Arial;
+	margin: 10px;
+	font-size: 13px;
+}
+
+ul {
+	list-style-type: none;
+	padding: 0;
+}
+
+li {
+	margin-bottom: 10px;
+}
+
+span {
+	color: #fff;
+}
+
+</style>
+
+</head>
+<body>
+
+<ul class="info"></ul>
+
+<script type="text/javascript">
+
+var list = document.querySelector('ul');
+
+var addLine = function(k, v) {
+	var li = document.createElement('li');
+	li.innerHTML = k + '<br><span>' + v + '</span>';
+	list.appendChild(li);
+}
+
+addLine('window.innerWidth', window.innerWidth);
+addLine('window.innerHeight', window.innerHeight);
+addLine('window.devicePixelRatio', window.devicePixelRatio);
+addLine('navigator.userAgent', navigator.userAgent);
+addLine('navigator.platform', navigator.platform);
+
+</script>
+
+<script>
+if(location.host.indexOf('localhost') > -1 || location.host.indexOf('192.168') > -1) {
+	document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>');
+}
+</script>
+
+</body>
+</head>
