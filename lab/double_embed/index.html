@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>double embed brick</title>
+
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
+<meta charset="UTF-8">
+
+<style type="text/css">
+
+body {
+	background-color: #000;
+	color: #0f0;
+	font-family: monospace;
+	margin: 0px;
+}
+
+iframe {
+	display: block;
+	margin: 20px;
+}
+
+</style>
+
+</head>
+<body>
+
+<iframe width="560" height="345" src="youtube.html?VdLf4fihP78" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="330" src="soundcloud.html?114401262" frameborder="0" allowfullscreen></iframe>
+<iframe width="500" height="330" src="twitter.html" frameborder="0" allowfullscreen></iframe>
+
+<script>
+if(location.host.indexOf('localhost') > -1 || location.host.indexOf('192.168') > -1) {
+	document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>');
+}
+</script>
+
+</body>
+</head>

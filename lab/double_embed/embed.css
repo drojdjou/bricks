@@ -1,0 +1,18 @@
+body {
+	background-color: #000;
+	color: #fff;
+	font-family: Arial;
+	margin: 0px;
+	overflow: hidden;
+}
+
+div {
+	background-color: #008000;
+	height: 30px;
+	line-height: 30px;
+	padding-left: 10px;
+}
+
+iframe {
+
+}
